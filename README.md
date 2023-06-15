@@ -16,7 +16,7 @@ Construa um app bacana de troca de livros. Os usuários devem poder listar livro
 ### As regras
 - Use Node.js.
 - Faça o front-end e o back-end de maneira separada, como se fossem dois projetos distintos.
-- Sinta-se à vontade para usar a biblioteca de UI que preferir.
+- Sinta-se à vontade para usar a biblioteca de UI que preferir. (Nós usamos material-ui)
 - Ao terminar, abra um pull request para esse repositório. O título deve ser seu nome e a data de conclusão. Use nosso template para mais informações do seu PR. 
 - Não se esqueça de fazer o deploy do app! Precisamos acessá-lo para avaliar.
 - Os testes precisam cobrir pelo menos 70% do projeto, para isso configure um coverage onde possamos averiguar.
