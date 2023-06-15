@@ -1,6 +1,14 @@
 # Coala Challenge 🐨
 
-## Troca de Livros
+Olá, candidato!
+
+Estamos empolgados por você ter chegado a esta etapa do nosso processo de seleção. O desafio que preparamos para você é composto de duas partes, projetadas para avaliar suas habilidades técnicas e práticas, bem como sua criatividade e capacidade de resolver problemas. Eai, aceita o desafio?
+
+## Teste de Algoritmo
+
+Acesse o teste [aqui](https://hr.gs/coala-challenge).
+
+## Projeto: Troca de Livros
 
 ### O que você precisa fazer?
 Construa um app bacana de troca de livros. Os usuários devem poder listar livros pra trocar, buscar livros e propor trocas.
