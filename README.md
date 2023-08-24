@@ -14,7 +14,7 @@ Acesse o teste [aqui](https://hr.gs/coala-challenge).
 Construa um app bacana de troca de livros. Os usuários devem poder listar livros pra trocar, buscar livros e propor trocas.
 
 ### As regras
-- Use Node.js.
+- Use Node.js com NestJs no back e Next no front.
 - Faça o front-end e o back-end de maneira separada, como se fossem dois projetos distintos.
 - Sinta-se à vontade para usar a biblioteca de UI que preferir. (Nós usamos material-ui)
 - Ao terminar, abra um pull request para esse repositório. O título deve ser seu nome e a data de conclusão. Use nosso template para mais informações do seu PR. 
