@@ -1,0 +1,3 @@
+[submodule "social-nest-backend"]
+	path = social-nest-backend
+	url = https://github.com/luteroelavoco/social-nest-backend.git
