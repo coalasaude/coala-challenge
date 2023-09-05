@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import ThemeRegistry from '@/components/ThemeRegistry';
+import Header from '@/components/Header';
 
 export const metadata: Metadata = {
   title: 'Wormhole',
@@ -10,7 +11,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-br">
       <body>
-        <ThemeRegistry>{children}</ThemeRegistry>
+        <ThemeRegistry>
+          <Header />
+          {children}
+        </ThemeRegistry>
       </body>
     </html>
   );

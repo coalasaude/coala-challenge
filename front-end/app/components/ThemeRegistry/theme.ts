@@ -10,6 +10,23 @@ const roboto = Roboto({
 const theme = createTheme({
   typography: {
     fontFamily: roboto.style.fontFamily,
+
+    button: {
+      textTransform: 'none',
+    },
+  },
+  palette: {
+    background: {
+      default: '#f5f5f5',
+    },
+
+    secondary: {
+      main: '#FFFFFF',
+    },
+
+    primary: {
+      main: '#6FA9E6',
+    },
   },
 });
 
