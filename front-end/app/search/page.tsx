@@ -1,8 +1,54 @@
-import { Container, Typography } from '@mui/material';
+import Banner from '@/components/Banner';
+import { Box, Container, Typography } from '@mui/material';
 
 async function getBooks(q: string) {
-  const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${q}`);
-  return response.json();
+  return [
+    {
+      id: 1,
+      title: 'vinte mil léguas submarinas',
+      image: '/book.jpg',
+    },
+    {
+      id: 1,
+      title: 'vinte mil léguas submarinas',
+      image: '/book.jpg',
+    },
+    {
+      id: 1,
+      title: 'vinte mil léguas submarinas',
+      image: '/book.jpg',
+    },
+    {
+      id: 1,
+      title: 'vinte mil léguas submarinas',
+      image: '/book.jpg',
+    },
+    {
+      id: 1,
+      title: 'vinte mil léguas submarinas',
+      image: '/book.jpg',
+    },
+    {
+      id: 1,
+      title: 'vinte mil léguas submarinas',
+      image: '/book.jpg',
+    },
+    {
+      id: 1,
+      title: 'vinte mil léguas submarinas',
+      image: '/book.jpg',
+    },
+    {
+      id: 1,
+      title: 'vinte mil léguas submarinas',
+      image: '/book.jpg',
+    },
+    {
+      id: 1,
+      title: 'vinte mil léguas submarinas',
+      image: '/book.jpg',
+    },
+  ];
 }
 
 type Props = {
@@ -14,9 +60,21 @@ export default async function Search({ searchParams }: Props) {
 
   return (
     <Container>
-      <Typography variant="h1">Search</Typography>
+      <Box mt={15}>
+        <Typography variant="h4">Resultados para "{searchParams.q}"</Typography>
 
-      <pre>{JSON.stringify(books, null, 2)}</pre>
+        <Box mt={2}>
+          <Typography variant="body1">Encontramos {books.length} resultados</Typography>
+        </Box>
+      </Box>
+
+      <Box mt={5}>
+        <Box mt={2} display="flex" flexWrap="wrap" gap="2rem">
+          {books.map((book) => (
+            <Banner book={book} key={book.id} />
+          ))}
+        </Box>
+      </Box>
     </Container>
   );
 }
