@@ -1,7 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
+
+import { Book } from '@/domain/entities';
+import { BookRepository } from '@/repositories';
+
 import { CreateBook } from './create-book.interface';
-import { Book } from '../../../domain/entities';
-import { BookRepository } from 'src/repositories/book-repository.interface';
 
 @Injectable()
 export class CreateBookService implements CreateBook {

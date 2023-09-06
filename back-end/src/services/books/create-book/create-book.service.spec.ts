@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { faker } from '@faker-js/faker';
 
-import { BookRepository } from '../../../repositories/book-repository.interface';
-import { Book } from '../../../domain/entities';
+import { BookRepository } from '@/repositories';
+import { Book } from '@/domain/entities';
 
 import { CreateBookService } from './create-book.service';
 import { CreateBook } from './create-book.interface';

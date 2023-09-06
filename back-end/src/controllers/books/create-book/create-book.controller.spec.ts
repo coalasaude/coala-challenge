@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
+
+import { CreateBookService } from '@/services/books/create-book';
+
 import { CreateBookController } from './create-book.controller';
-import { CreateBookService } from '../../../services/books/create-book';
 
 describe('CreateBookController', () => {
   let createBookController: CreateBookController;
