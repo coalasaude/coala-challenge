@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { CreateBook } from '@/services/books/create-book';
 
 import { CreateBookController } from './create-book.controller';
-import { CreateBookDTO } from './create-book.dto';
+import * as CreateBookDTO from './create-book.dto';
 import { faker } from '@faker-js/faker';
 
 describe('CreateBookController', () => {

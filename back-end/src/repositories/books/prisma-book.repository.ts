@@ -9,8 +9,12 @@ import { PrismaService } from '../prisma.service';
 export class PrismaBookRepository implements BookRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async create(book: Book): Promise<Book> {
-    const createdBook = await this.prismaService.books.create({
+  getById(id: string): Promise<Book> {
+    return this.prismaService.books.findUnique({ where: { id } });
+  }
+
+  create(book: Book): Promise<Book> {
+    return this.prismaService.books.create({
       data: {
         id: book.id,
         title: book.title,
@@ -21,7 +25,5 @@ export class PrismaBookRepository implements BookRepository {
         image: book.image,
       },
     });
-
-    return createdBook;
   }
 }

@@ -2,7 +2,7 @@ import { Body, Controller, Inject, Post } from '@nestjs/common';
 
 import { CreateBook } from '@/services/books/create-book';
 
-import { CreateBookDTO } from './create-book.dto';
+import * as CreateBookDTO from './create-book.dto';
 
 @Controller('/books')
 export class CreateBookController {
