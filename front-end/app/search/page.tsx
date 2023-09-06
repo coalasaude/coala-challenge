@@ -1,5 +1,7 @@
-import Banner from '@/components/Banner';
 import { Box, Container, Typography } from '@mui/material';
+
+import Banner from '@/components/Banner';
+import SelectFilter from './components/SelectFilter';
 
 async function getBooks(q: string) {
   return [
@@ -60,11 +62,21 @@ export default async function Search({ searchParams }: Props) {
 
   return (
     <Container>
-      <Box mt={15}>
-        <Typography variant="h4">Resultados para "{searchParams.q}"</Typography>
+      <Box mt={15} display="flex" justifyContent="space-between">
+        <Box>
+          <Typography variant="h4">Resultados para "{searchParams.q}"</Typography>
 
-        <Box mt={2}>
-          <Typography variant="body1">Encontramos {books.length} resultados</Typography>
+          <Box mt={2}>
+            <Typography variant="body1">Encontramos {books.length} resultados</Typography>
+          </Box>
+        </Box>
+
+        <Box display="flex" alignItems="flex-end">
+          <SelectFilter
+            placeholder="Categorias"
+            filter="category"
+            items={['Drama', 'Aventura', 'Comédia', 'Biografia']}
+          />
         </Box>
       </Box>
 
