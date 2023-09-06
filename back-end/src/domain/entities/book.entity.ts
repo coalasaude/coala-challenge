@@ -3,6 +3,7 @@ import * as Crypto from 'crypto';
 type BookConstructor = {
   id?: string;
   title: string;
+  author: string;
   publisher: string;
   year: number;
   description: string;
@@ -21,6 +22,7 @@ export class Book {
   constructor(params: BookConstructor) {
     this.id = params.id || Crypto.randomUUID();
     this.title = params.title;
+    this.author = params.author;
     this.publisher = params.publisher;
     this.year = params.year;
     this.description = params.description;
