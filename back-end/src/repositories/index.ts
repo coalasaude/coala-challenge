@@ -1,2 +1,2 @@
-export * from './book-repository.interface';
-export * from './book.repository';
+export * from './books';
+export * from './prisma.service';
