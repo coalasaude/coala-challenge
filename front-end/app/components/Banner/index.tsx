@@ -16,7 +16,7 @@ type Props = {
 export default function Banner({ book }: Props) {
   return (
     <Box sx={{ width: 200, height: 300, position: 'relative', minWidth: 200 }} title={book.title}>
-      <Link href={`/book/${book.id}`}>
+      <Link href={`/books/${book.id}`}>
         <Image src={book.image} alt="book" fill objectFit="cover" />
       </Link>
     </Box>
