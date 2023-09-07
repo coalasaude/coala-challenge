@@ -4,14 +4,14 @@ import { faker } from '@faker-js/faker';
 import { BookRepository } from '@/repositories';
 import { Book } from '@/domain/entities';
 
-import { GetBookByIdService } from './get-book-by-id.service';
-import { GetBookById } from './get-book-by-id.interface';
+import { GetBookByIdServiceImpl } from './get-book-by-id.service';
+import { GetBookByIdService } from './get-book-by-id.interface';
 
 describe('GetBookByIdService', () => {
-  let sut: GetBookByIdService;
+  let sut: GetBookByIdServiceImpl;
   let bookRepository: BookRepository;
 
-  let params: GetBookById.Params;
+  let params: GetBookByIdService.Params;
   let book: Book;
 
   beforeEach(async () => {
@@ -26,7 +26,7 @@ describe('GetBookByIdService', () => {
 
     const app: TestingModule = await Test.createTestingModule({
       providers: [
-        GetBookByIdService,
+        GetBookByIdServiceImpl,
         {
           provide: 'BookRepository',
           useValue: {
@@ -36,7 +36,7 @@ describe('GetBookByIdService', () => {
       ],
     }).compile();
 
-    sut = app.get<GetBookByIdService>(GetBookByIdService);
+    sut = app.get<GetBookByIdServiceImpl>(GetBookByIdServiceImpl);
     bookRepository = app.get<BookRepository>('BookRepository');
 
     params = { id: 'bc5c8e33-a815-4c77-9268-6363ee95529a' };

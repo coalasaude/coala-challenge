@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { faker } from '@faker-js/faker';
 
 import { NotFoundError } from '@/domain/errors';
-import { CreateTrade } from '@/services/trades/create-trade';
+import { CreateTradeService } from '@/services/trades/create-trade';
 
 import * as TradeBookDTO from './create-trade.dto';
 import { CreateTradeController } from './create-trade.controller';
@@ -13,7 +13,7 @@ import { Trade } from '@/domain/entities';
 
 describe('CreateTradeController', () => {
   let createTradeController: CreateTradeController;
-  let createTradeService: CreateTrade;
+  let createTradeService: CreateTradeService;
 
   let params: TradeBookDTO.Request & { bookId: string };
   let trade: Trade;
@@ -44,7 +44,7 @@ describe('CreateTradeController', () => {
     }).compile();
 
     createTradeController = app.get<CreateTradeController>(CreateTradeController);
-    createTradeService = app.get<CreateTrade>('CreateTrade');
+    createTradeService = app.get<CreateTradeService>('CreateTrade');
 
     params = {
       bookId: Crypto.randomBytes(16).toString('hex'),

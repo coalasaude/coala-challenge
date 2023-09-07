@@ -4,8 +4,8 @@ import { faker } from '@faker-js/faker';
 import { BookRepository } from '@/repositories';
 import { Book } from '@/domain/entities';
 
-import { CreateBookService } from './create-book.service';
-import { CreateBook } from './create-book.interface';
+import { CreateBookServiceImpl } from './create-book.service';
+import { CreateBookService } from './create-book.interface';
 
 jest.mock('crypto', () => ({
   ...jest.requireActual('crypto'),
@@ -13,15 +13,15 @@ jest.mock('crypto', () => ({
 }));
 
 describe('CreateBookService', () => {
-  let sut: CreateBookService;
+  let sut: CreateBookServiceImpl;
   let bookRepository: BookRepository;
 
-  let params: CreateBook.Params;
+  let params: CreateBookService.Params;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       providers: [
-        CreateBookService,
+        CreateBookServiceImpl,
         {
           provide: 'BookRepository',
           useValue: { create: jest.fn().mockImplementation((book: Book) => book) },
@@ -29,7 +29,7 @@ describe('CreateBookService', () => {
       ],
     }).compile();
 
-    sut = app.get<CreateBookService>(CreateBookService);
+    sut = app.get<CreateBookServiceImpl>(CreateBookServiceImpl);
     bookRepository = app.get<BookRepository>('BookRepository');
 
     params = {

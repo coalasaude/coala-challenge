@@ -5,13 +5,13 @@ import { faker } from '@faker-js/faker';
 
 import { NotFoundError } from '@/domain/errors';
 import { Book } from '@/domain/entities';
-import { GetBookById } from '@/services/books/get-book-by-id';
+import { GetBookByIdService } from '@/services/books/get-book-by-id';
 
 import { GetBookByIdController } from './get-book-by-id.controller';
 
 describe('CreateBookController', () => {
   let getBookByIdController: GetBookByIdController;
-  let getBookByIdService: GetBookById;
+  let getBookByIdService: GetBookByIdService;
 
   let params: string;
   let book: Book;
@@ -37,7 +37,7 @@ describe('CreateBookController', () => {
     }).compile();
 
     getBookByIdController = app.get<GetBookByIdController>(GetBookByIdController);
-    getBookByIdService = app.get<GetBookById>('GetBookById');
+    getBookByIdService = app.get<GetBookByIdService>('GetBookById');
 
     params = Crypto.randomUUID();
   });

@@ -3,10 +3,10 @@ import { faker } from '@faker-js/faker';
 
 import { BookRepository, TradeRepository } from '@/repositories';
 import { Book, Trade } from '@/domain/entities';
-
-import { CreateTradeService } from './create-trade.service';
-import { CreateTrade } from './create-trade.interface';
 import { TradeStatus } from '@/domain/types';
+
+import { CreateTradeServiceImpl } from './create-trade.service';
+import { CreateTradeService } from './create-trade.interface';
 
 jest.mock('crypto', () => ({
   ...jest.requireActual('crypto'),
@@ -14,11 +14,11 @@ jest.mock('crypto', () => ({
 }));
 
 describe('CreateTradeService', () => {
-  let sut: CreateTradeService;
+  let sut: CreateTradeServiceImpl;
   let bookRepository: BookRepository;
   let tradeRepository: TradeRepository;
 
-  let params: CreateTrade.Params;
+  let params: CreateTradeService.Params;
   let trade: Trade;
   let book: Book;
 
@@ -41,7 +41,7 @@ describe('CreateTradeService', () => {
 
     const app: TestingModule = await Test.createTestingModule({
       providers: [
-        CreateTradeService,
+        CreateTradeServiceImpl,
         {
           provide: 'BookRepository',
           useValue: { getById: jest.fn().mockResolvedValue(book) },
@@ -53,7 +53,7 @@ describe('CreateTradeService', () => {
       ],
     }).compile();
 
-    sut = app.get<CreateTradeService>(CreateTradeService);
+    sut = app.get<CreateTradeServiceImpl>(CreateTradeServiceImpl);
     bookRepository = app.get<BookRepository>('BookRepository');
     tradeRepository = app.get<TradeRepository>('TradeRepository');
 

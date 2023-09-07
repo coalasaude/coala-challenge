@@ -3,13 +3,13 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Book } from '@/domain/entities';
 import { BookRepository } from '@/repositories';
 
-import { CreateBook } from './create-book.interface';
+import { CreateBookService } from './create-book.interface';
 
 @Injectable()
-export class CreateBookService implements CreateBook {
+export class CreateBookServiceImpl implements CreateBookService {
   constructor(@Inject('BookRepository') private readonly bookRepository: BookRepository) {}
 
-  async create(params: CreateBook.Params): Promise<CreateBook.Response> {
+  async create(params: CreateBookService.Params): Promise<CreateBookService.Response> {
     let book = new Book(params);
     book = await this.bookRepository.create(book);
     return book;

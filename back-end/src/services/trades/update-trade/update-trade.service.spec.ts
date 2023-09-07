@@ -4,8 +4,8 @@ import { faker } from '@faker-js/faker';
 import { TradeRepository } from '@/repositories';
 import { Book, Trade } from '@/domain/entities';
 
-import { UpdateTradeService } from './update-trade.service';
-import { UpdateTrade } from './update-trade.interface';
+import { UpdateTradeServiceImpl } from './update-trade.service';
+import { UpdateTradeService } from './update-trade.interface';
 import { TradeStatus } from '@/domain/types';
 
 jest.mock('crypto', () => ({
@@ -14,10 +14,10 @@ jest.mock('crypto', () => ({
 }));
 
 describe('UpdateTradeService', () => {
-  let sut: UpdateTradeService;
+  let sut: UpdateTradeServiceImpl;
   let tradeRepository: TradeRepository;
 
-  let params: UpdateTrade.Params;
+  let params: UpdateTradeService.Params;
   let trade: Trade;
   let book: Book;
 
@@ -45,7 +45,7 @@ describe('UpdateTradeService', () => {
 
     const app: TestingModule = await Test.createTestingModule({
       providers: [
-        UpdateTradeService,
+        UpdateTradeServiceImpl,
         {
           provide: 'TradeRepository',
           useValue: {
@@ -56,7 +56,7 @@ describe('UpdateTradeService', () => {
       ],
     }).compile();
 
-    sut = app.get<UpdateTradeService>(UpdateTradeService);
+    sut = app.get<UpdateTradeServiceImpl>(UpdateTradeServiceImpl);
     tradeRepository = app.get<TradeRepository>('TradeRepository');
   });
 

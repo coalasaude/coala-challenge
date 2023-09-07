@@ -3,14 +3,14 @@ import { Inject, Injectable } from '@nestjs/common';
 import { NotFoundError } from '@/domain/errors';
 import { BookRepository, TradeRepository } from '@/repositories';
 
-import { UpdateTrade } from './update-trade.interface';
+import { UpdateTradeService } from './update-trade.interface';
 import { Trade } from '@/domain/entities';
 
 @Injectable()
-export class UpdateTradeService implements UpdateTrade {
+export class UpdateTradeServiceImpl implements UpdateTradeService {
   constructor(@Inject('TradeRepository') private readonly tradeRepository: TradeRepository) {}
 
-  async update({ id, status }: UpdateTrade.Params): Promise<UpdateTrade.Response> {
+  async update({ id, status }: UpdateTradeService.Params): Promise<UpdateTradeService.Response> {
     const trade = await this.tradeRepository.findById(id);
 
     if (!trade) throw new NotFoundError('Trade not found');
@@ -21,7 +21,7 @@ export class UpdateTradeService implements UpdateTrade {
     return this.createResponse(trade);
   }
 
-  private createResponse(trade: Trade): UpdateTrade.Response {
+  private createResponse(trade: Trade): UpdateTradeService.Response {
     return {
       id: trade.id,
       message: trade.message,

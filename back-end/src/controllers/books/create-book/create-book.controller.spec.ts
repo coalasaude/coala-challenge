@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
-import { CreateBook } from '@/services/books/create-book';
+import { CreateBookService } from '@/services/books/create-book';
 
 import { CreateBookController } from './create-book.controller';
 import * as CreateBookDTO from './create-book.dto';
@@ -8,7 +8,7 @@ import { faker } from '@faker-js/faker';
 
 describe('CreateBookController', () => {
   let createBookController: CreateBookController;
-  let createBookService: CreateBook;
+  let createBookService: CreateBookService;
 
   let params: CreateBookDTO.Request;
 
@@ -42,7 +42,7 @@ describe('CreateBookController', () => {
     }).compile();
 
     createBookController = app.get<CreateBookController>(CreateBookController);
-    createBookService = app.get<CreateBook>('CreateBook');
+    createBookService = app.get<CreateBookService>('CreateBook');
   });
 
   describe('/books', () => {

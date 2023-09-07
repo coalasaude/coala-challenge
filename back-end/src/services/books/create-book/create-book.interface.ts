@@ -1,8 +1,8 @@
-export interface CreateBook {
-  create(params: CreateBook.Params): Promise<CreateBook.Response>;
+export interface CreateBookService {
+  create(params: CreateBookService.Params): Promise<CreateBookService.Response>;
 }
 
-export namespace CreateBook {
+export namespace CreateBookService {
   export type Params = {
     title: string;
     publisher: string;

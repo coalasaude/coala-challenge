@@ -4,17 +4,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { faker } from '@faker-js/faker';
 
 import { NotFoundError } from '@/domain/errors';
-import { CreateTrade } from '@/services/trades/create-trade';
+import { UpdateTradeService } from '@/services/trades/update-trade';
 
 import * as UpdateTradeDTO from './update-trade.dto';
 import { UpdateTradeController } from './update-trade.controller';
 import { TradeStatus } from '@/domain/types';
 import { Trade } from '@/domain/entities';
-import { UpdateTrade } from '@/services/trades/update-trade';
 
 describe('UpdateTradeController', () => {
   let updateTradeController: UpdateTradeController;
-  let updateTradeService: UpdateTrade;
+  let updateTradeService: UpdateTradeService;
 
   let params: UpdateTradeDTO.Request & { id: string };
   let trade: Trade;
@@ -47,7 +46,7 @@ describe('UpdateTradeController', () => {
     }).compile();
 
     updateTradeController = app.get<UpdateTradeController>(UpdateTradeController);
-    updateTradeService = app.get<UpdateTrade>('UpdateTrade');
+    updateTradeService = app.get<UpdateTradeService>('UpdateTrade');
 
     params = {
       id: Crypto.randomUUID(),
