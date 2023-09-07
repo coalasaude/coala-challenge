@@ -4,16 +4,55 @@ import { PrismaService } from '@/common/services/prisma.service';
 import { Book, Trade } from '@/books/domain/entities';
 import { TradeStatus } from '@/books/domain/types';
 
-import { FindByIdParams, TradeRepository } from './trade-repository.interface';
+import { TradeRepository } from './trade-repository.interface';
+import { User } from '@/books/domain/entities/user.entity';
 
 @Injectable()
 export class PrismaTradeRepository implements TradeRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async findById({ id, userId }: FindByIdParams): Promise<Trade> {
+  async search({
+    userId,
+    status,
+    page,
+    limit,
+    scope,
+  }: TradeRepository.SearchParams): Promise<TradeRepository.SearchResponse> {
+    const scopeCondition = scope === 'requester' ? { usersId: userId } : { Book: { usersId: userId } };
+
+    const trades = await this.prismaService.trades.findMany({
+      where: { status, ...scopeCondition },
+      include: { Book: true, Users: true },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    const total = await this.prismaService.trades.count({ where: { status, ...scopeCondition } });
+
+    return {
+      pagination: {
+        page: page,
+        limit: limit,
+        total: total,
+      },
+
+      trades: trades.map(
+        (trade) =>
+          new Trade({
+            id: trade.id,
+            message: trade.message,
+            status: trade.status as TradeStatus,
+            book: new Book({ ...trade.Book, user: trade.Book.usersId }),
+            requester: trade.Users,
+          }),
+      ),
+    };
+  }
+
+  async findById({ id, userId }: TradeRepository.FindByIdParams): Promise<Trade> {
     const trade = await this.prismaService.trades.findUnique({
       where: { id, usersId: userId },
-      include: { Book: true },
+      include: { Book: true, Users: true },
     });
 
     return (
@@ -23,6 +62,11 @@ export class PrismaTradeRepository implements TradeRepository {
         message: trade.message,
         status: trade.status as TradeStatus,
         book: new Book({ ...trade.Book, user: trade.Book.usersId }),
+        requester: new User({
+          id: trade.usersId,
+          name: trade.Users.name,
+          username: trade.Users.username,
+        }),
       })
     );
   }
@@ -34,7 +78,7 @@ export class PrismaTradeRepository implements TradeRepository {
         message: trade.message,
         status: trade.status,
         bookId: trade.book.id,
-        usersId: trade.user,
+        usersId: trade.requester.id,
       },
 
       include: { Book: true },
@@ -50,7 +94,7 @@ export class PrismaTradeRepository implements TradeRepository {
 
   async update(trade: Trade): Promise<Trade> {
     const updated = await this.prismaService.trades.update({
-      where: { id: trade.id, usersId: trade.user },
+      where: { id: trade.id, usersId: trade.requester.id },
       data: { message: trade.message, status: trade.status },
       include: { Book: true },
     });

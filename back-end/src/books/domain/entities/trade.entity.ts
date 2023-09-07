@@ -1,13 +1,16 @@
 import * as Crypto from 'crypto';
+
 import { TradeStatus } from '../types';
+
 import { Book } from './book.entity';
+import { User } from './user.entity';
 
 type TradeConstructor = {
   id?: string;
   message: string;
   status?: TradeStatus;
   book: Book;
-  requestUser?: string;
+  requester?: User;
 };
 
 export class Trade {
@@ -15,14 +18,14 @@ export class Trade {
   private _message: string;
   private _status: TradeStatus;
   private _book: Book;
-  private _requestUser: string;
+  private _requester: User;
 
   constructor(params: TradeConstructor) {
     this._id = params.id || Crypto.randomUUID();
     this._message = params.message;
     this._status = params.status || TradeStatus.PENDING;
     this._book = params.book;
-    this._requestUser = params.requestUser;
+    this._requester = params.requester;
   }
 
   get id(): string {
@@ -48,7 +51,7 @@ export class Trade {
     return this._book;
   }
 
-  get user(): string {
-    return this._requestUser;
+  get requester(): User {
+    return this._requester;
   }
 }

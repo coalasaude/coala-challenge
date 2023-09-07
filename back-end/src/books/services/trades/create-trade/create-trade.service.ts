@@ -21,7 +21,7 @@ export class CreateTradeServiceImpl implements CreateTradeService {
 
     if (userId === book.user) throw new CannotCreateTradeError();
 
-    let trade = new Trade({ message, book, requestUser: userId });
+    let trade = new Trade({ message, book, requester: { id: userId } });
     trade = await this.tradeRepository.create(trade);
 
     return this.createResponse(trade);

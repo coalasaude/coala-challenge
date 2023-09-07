@@ -13,13 +13,13 @@ export class PrismaBookRepository implements BookRepository {
     const { q, page, limit } = params;
 
     const books = await this.prismaService.books.findMany({
-      where: { OR: [{ title: { contains: q, mode: 'insensitive' } }] },
+      where: { title: { contains: q, mode: 'insensitive' } },
       skip: (page - 1) * limit,
       take: limit,
     });
 
     const total = await this.prismaService.books.count({
-      where: { OR: [{ title: { contains: q, mode: 'insensitive' } }] },
+      where: { title: { contains: q, mode: 'insensitive' } },
     });
 
     return {
