@@ -12,9 +12,11 @@ export class UpdateTradeServiceImpl implements UpdateTradeService {
   constructor(@Inject(Tokens.TradeRepository) private readonly tradeRepository: TradeRepository) {}
 
   async update({ userId, id, status }: UpdateTradeService.Params): Promise<UpdateTradeService.Response> {
-    const trade = await this.tradeRepository.findById(userId, id);
+    const trade = await this.tradeRepository.findById({ id });
 
     if (!trade) throw new NotFoundError('Trade not found');
+
+    if (userId !== trade.book.user) throw new NotFoundError('Trade not found 2');
 
     trade.status = status;
     await this.tradeRepository.update(trade);

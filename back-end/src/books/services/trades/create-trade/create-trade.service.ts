@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 
 import { Tokens } from '@/books/settings/tokens';
-import { NotFoundError } from '@/books/domain/errors';
+import { NotFoundError, CannotCreateTradeError } from '@/books/domain/errors';
 import { Trade } from '@/books/domain/entities';
 import { BookRepository, TradeRepository } from '@/books/repositories';
 
@@ -19,7 +19,9 @@ export class CreateTradeServiceImpl implements CreateTradeService {
 
     if (!book) throw new NotFoundError('Book not found');
 
-    let trade = new Trade({ message, book, user: userId });
+    if (userId === book.user) throw new CannotCreateTradeError();
+
+    let trade = new Trade({ message, book, requestUser: userId });
     trade = await this.tradeRepository.create(trade);
 
     return this.createResponse(trade);

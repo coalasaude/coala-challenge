@@ -10,9 +10,8 @@ export class PrismaBookRepository implements BookRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
   async getById({ id, userId }: GetByIdParams): Promise<Book> {
-    console.log('userid', userId);
     const book = await this.prismaService.books.findUnique({ where: { id, usersId: userId } });
-    return book && new Book({ ...book, user: userId });
+    return book && new Book({ ...book, user: book.usersId });
   }
 
   async create(book: Book): Promise<Book> {

@@ -7,7 +7,7 @@ type TradeConstructor = {
   message: string;
   status?: TradeStatus;
   book: Book;
-  user?: string;
+  requestUser?: string;
 };
 
 export class Trade {
@@ -15,14 +15,14 @@ export class Trade {
   private _message: string;
   private _status: TradeStatus;
   private _book: Book;
-  private _user: string;
+  private _requestUser: string;
 
   constructor(params: TradeConstructor) {
     this._id = params.id || Crypto.randomUUID();
     this._message = params.message;
     this._status = params.status || TradeStatus.PENDING;
     this._book = params.book;
-    this._user = params.user;
+    this._requestUser = params.requestUser;
   }
 
   get id(): string {
@@ -49,6 +49,6 @@ export class Trade {
   }
 
   get user(): string {
-    return this._user;
+    return this._requestUser;
   }
 }
