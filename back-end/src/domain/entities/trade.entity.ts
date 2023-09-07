@@ -30,11 +30,6 @@ export class Trade {
     return this._message;
   }
 
-  set message(message: string) {
-    this._status = TradeStatus.PENDING;
-    this._message = message;
-  }
-
   get status(): TradeStatus {
     return this._status;
   }

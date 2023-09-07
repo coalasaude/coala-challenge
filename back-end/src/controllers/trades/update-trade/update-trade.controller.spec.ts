@@ -69,6 +69,12 @@ describe('UpdateTradeController', () => {
       await expect(updateTradeController.trade(params.id, { status: params.status })).rejects.toEqual(expected);
     });
 
+    it('should throw an error if the service throws', async () => {
+      jest.spyOn(updateTradeService, 'update').mockRejectedValue(new Error());
+
+      await expect(updateTradeController.trade(params.id, { status: params.status })).rejects.toThrow();
+    });
+
     it('should return the trade on created', async () => {
       const got = await updateTradeController.trade(params.id, { status: params.status });
 

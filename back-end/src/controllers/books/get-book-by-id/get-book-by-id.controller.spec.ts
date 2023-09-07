@@ -56,6 +56,14 @@ describe('CreateBookController', () => {
       await expect(getBookByIdController.create(params)).rejects.toEqual(expected);
     });
 
+    it('should throw an error if the service throws', async () => {
+      jest.spyOn(getBookByIdService, 'getById').mockRejectedValue(new Error('Internal server error'));
+
+      const expected = new Error('Internal server error');
+
+      await expect(getBookByIdController.create(params)).rejects.toEqual(expected);
+    });
+
     it('should return the book on created', async () => {
       const got = await getBookByIdController.create(params);
 

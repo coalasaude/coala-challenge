@@ -72,10 +72,24 @@ describe('UpdateTradeService', () => {
     await expect(sut.update(params)).rejects.toThrow('Trade not found');
   });
 
-  it('should call the trade repository with updated trade', async () => {
-    await sut.update(params);
+  it('should call the trade repository with REJECTED status', async () => {
+    await sut.update({ ...params, status: TradeStatus.REJECTED });
 
-    expect(tradeRepository.update).toHaveBeenCalledWith({ ...trade, _status: params.status });
+    expect(tradeRepository.update).toHaveBeenCalledWith({ ...trade, _status: TradeStatus.REJECTED });
+  });
+
+  it('should call the trade repository with ACCEPTED status', async () => {
+    jest.spyOn(tradeRepository, 'findById').mockResolvedValueOnce(
+      new Trade({
+        message: trade.message,
+        book: trade.book,
+        status: TradeStatus.ACCEPTED,
+      }),
+    );
+
+    await sut.update({ ...params, status: TradeStatus.PENDING });
+
+    expect(tradeRepository.update).toHaveBeenCalledWith({ ...trade, _status: TradeStatus.ACCEPTED });
   });
 
   it('should return the trade with correct status', async () => {
