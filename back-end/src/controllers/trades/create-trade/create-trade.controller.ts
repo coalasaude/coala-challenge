@@ -2,10 +2,10 @@ import { Controller, Inject, Param, NotFoundException, Post, Body } from '@nestj
 
 import { TradeBook } from '@/services/books/trade-book';
 
-import * as TradeBookDTO from './trade-book.dto';
+import * as TradeBookDTO from './create-trade.dto';
 
 @Controller('/books/:id')
-export class TradeBookController {
+export class CreateTradeController {
   constructor(@Inject('TradeBook') private readonly tradeBookService: TradeBook) {}
 
   @Post('/trades')

@@ -6,13 +6,13 @@ import { faker } from '@faker-js/faker';
 import { NotFoundError } from '@/domain/errors';
 import { TradeBook } from '@/services/books/trade-book';
 
-import * as TradeBookDTO from './trade-book.dto';
-import { TradeBookController } from './trade-book.controller';
+import * as TradeBookDTO from './create-trade.dto';
+import { CreateTradeController } from './create-trade.controller';
 import { TradeStatus } from '@/domain/types';
 import { Trade } from '@/domain/entities';
 
-describe('TradeBookController', () => {
-  let tradeBookController: TradeBookController;
+describe('CreateTradeController', () => {
+  let createTradeController: CreateTradeController;
   let tradeBookService: TradeBook;
 
   let params: TradeBookDTO.Request & { bookId: string };
@@ -34,7 +34,7 @@ describe('TradeBookController', () => {
     });
 
     const app: TestingModule = await Test.createTestingModule({
-      controllers: [TradeBookController],
+      controllers: [CreateTradeController],
       providers: [
         {
           provide: 'TradeBook',
@@ -45,7 +45,7 @@ describe('TradeBookController', () => {
       ],
     }).compile();
 
-    tradeBookController = app.get<TradeBookController>(TradeBookController);
+    createTradeController = app.get<CreateTradeController>(CreateTradeController);
     tradeBookService = app.get<TradeBook>('TradeBook');
 
     params = {
@@ -56,7 +56,7 @@ describe('TradeBookController', () => {
 
   describe('/books/:id/trade', () => {
     it('should call the TradeBookService with correct params', async () => {
-      await tradeBookController.trade(params.bookId, { message: params.message });
+      await createTradeController.trade(params.bookId, { message: params.message });
       expect(tradeBookService.trade).toHaveBeenCalledWith(params);
     });
 
@@ -65,11 +65,11 @@ describe('TradeBookController', () => {
 
       const expected = new NotFoundException();
 
-      await expect(tradeBookController.trade(params.bookId, { message: params.message })).rejects.toEqual(expected);
+      await expect(createTradeController.trade(params.bookId, { message: params.message })).rejects.toEqual(expected);
     });
 
     it('should return the trade on created', async () => {
-      const got = await tradeBookController.trade(params.bookId, { message: params.message });
+      const got = await createTradeController.trade(params.bookId, { message: params.message });
 
       const expected = trade;
 
