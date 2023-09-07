@@ -3,7 +3,10 @@ export interface GetBookByIdService {
 }
 
 export namespace GetBookByIdService {
-  export type Params = { id: string };
+  export type Params = {
+    userId: string;
+    id: string;
+  };
 
   export type Response = {
     id: string;

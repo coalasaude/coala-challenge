@@ -7,6 +7,7 @@ type BookConstructor = {
   publisher: string;
   year: number;
   description: string;
+  user?: string;
   image?: string;
 };
 
@@ -18,6 +19,7 @@ export class Book {
   year: number;
   description: string;
   image: string;
+  user: string;
 
   constructor(params: BookConstructor) {
     this.id = params.id || Crypto.randomUUID();
@@ -27,5 +29,6 @@ export class Book {
     this.year = params.year;
     this.description = params.description;
     this.image = params.image;
+    this.user = params.user;
   }
 }

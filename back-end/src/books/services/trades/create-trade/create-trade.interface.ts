@@ -6,11 +6,13 @@ export interface CreateTradeService {
 
 export namespace CreateTradeService {
   export type Params = {
+    userId: string;
     bookId: string;
     message: string;
   };
 
   export type Response = {
+    id: string;
     message: string;
     status: TradeStatus;
     book: {

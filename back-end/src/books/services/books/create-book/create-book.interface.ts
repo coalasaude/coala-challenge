@@ -9,6 +9,7 @@ export namespace CreateBookService {
     author: string;
     year: number;
     description: string;
+    user: string;
     image?: string;
   };
 

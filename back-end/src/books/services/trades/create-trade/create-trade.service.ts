@@ -14,12 +14,12 @@ export class CreateTradeServiceImpl implements CreateTradeService {
     @Inject(Tokens.TradeRepository) private readonly tradeRepository: TradeRepository,
   ) {}
 
-  async create({ bookId, message }: CreateTradeService.Params): Promise<CreateTradeService.Response> {
-    const book = await this.bookRepository.getById(bookId);
+  async create({ userId, bookId, message }: CreateTradeService.Params): Promise<CreateTradeService.Response> {
+    const book = await this.bookRepository.getById({ id: bookId });
 
     if (!book) throw new NotFoundError('Book not found');
 
-    let trade = new Trade({ message, book });
+    let trade = new Trade({ message, book, user: userId });
     trade = await this.tradeRepository.create(trade);
 
     return this.createResponse(trade);
@@ -27,6 +27,7 @@ export class CreateTradeServiceImpl implements CreateTradeService {
 
   private createResponse(trade: Trade): CreateTradeService.Response {
     return {
+      id: trade.id,
       message: trade.message,
       status: trade.status,
       book: {

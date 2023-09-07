@@ -11,8 +11,8 @@ import { UpdateTradeService } from './update-trade.interface';
 export class UpdateTradeServiceImpl implements UpdateTradeService {
   constructor(@Inject(Tokens.TradeRepository) private readonly tradeRepository: TradeRepository) {}
 
-  async update({ id, status }: UpdateTradeService.Params): Promise<UpdateTradeService.Response> {
-    const trade = await this.tradeRepository.findById(id);
+  async update({ userId, id, status }: UpdateTradeService.Params): Promise<UpdateTradeService.Response> {
+    const trade = await this.tradeRepository.findById(userId, id);
 
     if (!trade) throw new NotFoundError('Trade not found');
 

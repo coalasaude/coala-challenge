@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 import { PrismaService } from '@/common/services/prisma.service';
-import { Trade } from '@/books/domain/entities';
+import { Book, Trade } from '@/books/domain/entities';
 import { TradeStatus } from '@/books/domain/types';
 
 import { TradeRepository } from './trade-repository.interface';
@@ -10,9 +10,9 @@ import { TradeRepository } from './trade-repository.interface';
 export class PrismaTradeRepository implements TradeRepository {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async findById(id: string): Promise<Trade> {
+  async findById(userId: string, id: string): Promise<Trade> {
     const trade = await this.prismaService.trades.findUnique({
-      where: { id },
+      where: { id, usersId: userId },
       include: { Book: true },
     });
 
@@ -20,7 +20,7 @@ export class PrismaTradeRepository implements TradeRepository {
       id: trade.id,
       message: trade.message,
       status: trade.status as TradeStatus,
-      book: trade.Book,
+      book: new Book(trade.Book),
     });
   }
 
@@ -31,6 +31,7 @@ export class PrismaTradeRepository implements TradeRepository {
         message: trade.message,
         status: trade.status,
         bookId: trade.book.id,
+        usersId: trade.user,
       },
 
       include: { Book: true },
@@ -40,13 +41,13 @@ export class PrismaTradeRepository implements TradeRepository {
       id: created.id,
       message: created.message,
       status: created.status as TradeStatus,
-      book: created.Book,
+      book: new Book(created.Book),
     });
   }
 
   async update(trade: Trade): Promise<Trade> {
     const updated = await this.prismaService.trades.update({
-      where: { id: trade.id },
+      where: { id: trade.id, usersId: trade.user },
       data: { message: trade.message, status: trade.status },
       include: { Book: true },
     });
@@ -55,7 +56,7 @@ export class PrismaTradeRepository implements TradeRepository {
       id: updated.id,
       message: updated.message,
       status: updated.status as TradeStatus,
-      book: updated.Book,
+      book: new Book(updated.Book),
     });
   }
 }

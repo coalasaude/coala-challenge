@@ -6,6 +6,7 @@ export interface UpdateTradeService {
 
 export namespace UpdateTradeService {
   export type Params = {
+    userId: string;
     id: string;
     status: TradeStatus;
   };

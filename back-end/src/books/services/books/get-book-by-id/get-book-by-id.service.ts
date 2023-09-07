@@ -10,8 +10,8 @@ import { GetBookByIdService } from './get-book-by-id.interface';
 export class GetBookByIdServiceImpl implements GetBookByIdService {
   constructor(@Inject(Tokens.BookRepository) private readonly bookRepository: BookRepository) {}
 
-  async getById({ id }: GetBookByIdService.Params): Promise<GetBookByIdService.Response> {
-    const book = await this.bookRepository.getById(id);
+  async getById({ userId, id }: GetBookByIdService.Params): Promise<GetBookByIdService.Response> {
+    const book = await this.bookRepository.getById({ id, userId });
 
     if (!book) throw new NotFoundError('Book not found');
 
