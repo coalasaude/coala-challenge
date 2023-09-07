@@ -13,7 +13,7 @@ import { Trade } from '@/domain/entities';
 
 describe('CreateTradeController', () => {
   let createTradeController: CreateTradeController;
-  let tradeBookService: CreateTrade;
+  let createTradeService: CreateTrade;
 
   let params: TradeBookDTO.Request & { bookId: string };
   let trade: Trade;
@@ -37,16 +37,14 @@ describe('CreateTradeController', () => {
       controllers: [CreateTradeController],
       providers: [
         {
-          provide: 'TradeBook',
-          useValue: {
-            trade: jest.fn().mockResolvedValue(trade),
-          },
+          provide: 'CreateTrade',
+          useValue: { create: jest.fn().mockResolvedValue(trade) },
         },
       ],
     }).compile();
 
     createTradeController = app.get<CreateTradeController>(CreateTradeController);
-    tradeBookService = app.get<CreateTrade>('TradeBook');
+    createTradeService = app.get<CreateTrade>('CreateTrade');
 
     params = {
       bookId: Crypto.randomBytes(16).toString('hex'),
@@ -56,20 +54,20 @@ describe('CreateTradeController', () => {
 
   describe('/books/:id/trade', () => {
     it('should call the TradeBookService with correct params', async () => {
-      await createTradeController.trade(params.bookId, { message: params.message });
-      expect(tradeBookService.create).toHaveBeenCalledWith(params);
+      await createTradeController.create(params.bookId, { message: params.message });
+      expect(createTradeService.create).toHaveBeenCalledWith(params);
     });
 
     it('should return not found exception', async () => {
-      jest.spyOn(tradeBookService, 'trade').mockRejectedValue(new NotFoundError('Book not found'));
+      jest.spyOn(createTradeService, 'create').mockRejectedValue(new NotFoundError('Book not found'));
 
-      const expected = new NotFoundException();
+      const expected = new NotFoundException('Book not found');
 
-      await expect(createTradeController.trade(params.bookId, { message: params.message })).rejects.toEqual(expected);
+      await expect(createTradeController.create(params.bookId, { message: params.message })).rejects.toEqual(expected);
     });
 
     it('should return the trade on created', async () => {
-      const got = await createTradeController.trade(params.bookId, { message: params.message });
+      const got = await createTradeController.create(params.bookId, { message: params.message });
 
       const expected = trade;
 

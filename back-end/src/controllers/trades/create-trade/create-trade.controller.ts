@@ -6,12 +6,12 @@ import * as TradeBookDTO from './create-trade.dto';
 
 @Controller('/books/:id')
 export class CreateTradeController {
-  constructor(@Inject('TradeBook') private readonly tradeBookService: CreateTrade) {}
+  constructor(@Inject('CreateTrade') private readonly createTradeService: CreateTrade) {}
 
   @Post('/trades')
-  async trade(@Param('id') bookId: string, @Body() { message }: TradeBookDTO.Request): Promise<TradeBookDTO.Response> {
+  async create(@Param('id') bookId: string, @Body() { message }: TradeBookDTO.Request): Promise<TradeBookDTO.Response> {
     try {
-      return await this.tradeBookService.create({ bookId, message });
+      return await this.createTradeService.create({ bookId, message });
     } catch (error) {
       if (error.name === 'NotFoundError') throw new NotFoundException(error.message);
       throw error;

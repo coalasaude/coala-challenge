@@ -19,7 +19,7 @@ import { PrismaService, PrismaBookRepository, PrismaTradeRepository } from '@/re
     PrismaService,
     { provide: 'CreateBook', useClass: CreateBookService },
     { provide: 'GetBookById', useClass: GetBookByIdService },
-    { provide: 'TradeBook', useClass: CreateTradeService },
+    { provide: 'CreateTrade', useClass: CreateTradeService },
     { provide: 'UpdateTrade', useClass: UpdateTradeService },
     { provide: 'BookRepository', useClass: PrismaBookRepository },
     { provide: 'TradeRepository', useClass: PrismaTradeRepository },
