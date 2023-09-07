@@ -7,6 +7,7 @@ import { TradeStatus } from '@/domain/types';
 
 import { CreateTradeServiceImpl } from './create-trade.service';
 import { CreateTradeService } from './create-trade.interface';
+import { Tokens } from '@/settings/tokens';
 
 jest.mock('crypto', () => ({
   ...jest.requireActual('crypto'),
@@ -43,19 +44,19 @@ describe('CreateTradeService', () => {
       providers: [
         CreateTradeServiceImpl,
         {
-          provide: 'BookRepository',
+          provide: Tokens.BookRepository,
           useValue: { getById: jest.fn().mockResolvedValue(book) },
         },
         {
-          provide: 'TradeRepository',
+          provide: Tokens.TradeRepository,
           useValue: { create: jest.fn().mockResolvedValue(trade) },
         },
       ],
     }).compile();
 
     sut = app.get<CreateTradeServiceImpl>(CreateTradeServiceImpl);
-    bookRepository = app.get<BookRepository>('BookRepository');
-    tradeRepository = app.get<TradeRepository>('TradeRepository');
+    bookRepository = app.get<BookRepository>(Tokens.BookRepository);
+    tradeRepository = app.get<TradeRepository>(Tokens.TradeRepository);
 
     params = {
       bookId: book.id,

@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { faker } from '@faker-js/faker';
 
+import { Tokens } from '@/settings/tokens';
 import { BookRepository } from '@/repositories';
 import { Book } from '@/domain/entities';
 
@@ -28,7 +29,7 @@ describe('GetBookByIdService', () => {
       providers: [
         GetBookByIdServiceImpl,
         {
-          provide: 'BookRepository',
+          provide: Tokens.BookRepository,
           useValue: {
             getById: jest.fn().mockResolvedValue(book),
           },
@@ -37,7 +38,7 @@ describe('GetBookByIdService', () => {
     }).compile();
 
     sut = app.get<GetBookByIdServiceImpl>(GetBookByIdServiceImpl);
-    bookRepository = app.get<BookRepository>('BookRepository');
+    bookRepository = app.get<BookRepository>(Tokens.BookRepository);
 
     params = { id: 'bc5c8e33-a815-4c77-9268-6363ee95529a' };
   });

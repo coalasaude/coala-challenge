@@ -1,10 +1,11 @@
+import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { Tokens } from '@/settings/tokens';
 import { CreateBookService } from '@/services/books/create-book';
 
 import { CreateBookController } from './create-book.controller';
 import * as CreateBookDTO from './create-book.dto';
-import { faker } from '@faker-js/faker';
 
 describe('CreateBookController', () => {
   let createBookController: CreateBookController;
@@ -25,7 +26,7 @@ describe('CreateBookController', () => {
       controllers: [CreateBookController],
       providers: [
         {
-          provide: 'CreateBook',
+          provide: Tokens.CreateBookService,
           useValue: {
             create: jest.fn().mockResolvedValue({
               id: 'bc5c8e33-a815-4c77-9268-6363ee95529a',
@@ -42,7 +43,7 @@ describe('CreateBookController', () => {
     }).compile();
 
     createBookController = app.get<CreateBookController>(CreateBookController);
-    createBookService = app.get<CreateBookService>('CreateBook');
+    createBookService = app.get<CreateBookService>(Tokens.CreateBookService);
   });
 
   describe('/books', () => {

@@ -1,8 +1,9 @@
 import * as Crypto from 'crypto';
+import { faker } from '@faker-js/faker';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { faker } from '@faker-js/faker';
 
+import { Tokens } from '@/settings/tokens';
 import { NotFoundError } from '@/domain/errors';
 import { Book } from '@/domain/entities';
 import { GetBookByIdService } from '@/services/books/get-book-by-id';
@@ -30,14 +31,14 @@ describe('CreateBookController', () => {
       controllers: [GetBookByIdController],
       providers: [
         {
-          provide: 'GetBookById',
+          provide: Tokens.GetBookByIdService,
           useValue: { getById: jest.fn().mockResolvedValue(book) },
         },
       ],
     }).compile();
 
     getBookByIdController = app.get<GetBookByIdController>(GetBookByIdController);
-    getBookByIdService = app.get<GetBookByIdService>('GetBookById');
+    getBookByIdService = app.get<GetBookByIdService>(Tokens.GetBookByIdService);
 
     params = Crypto.randomUUID();
   });

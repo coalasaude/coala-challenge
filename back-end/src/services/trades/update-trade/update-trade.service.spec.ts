@@ -1,12 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { faker } from '@faker-js/faker';
 
-import { TradeRepository } from '@/repositories';
+import { Tokens } from '@/settings/tokens';
+import { TradeStatus } from '@/domain/types';
 import { Book, Trade } from '@/domain/entities';
+import { TradeRepository } from '@/repositories';
 
 import { UpdateTradeServiceImpl } from './update-trade.service';
 import { UpdateTradeService } from './update-trade.interface';
-import { TradeStatus } from '@/domain/types';
 
 jest.mock('crypto', () => ({
   ...jest.requireActual('crypto'),
@@ -47,7 +48,7 @@ describe('UpdateTradeService', () => {
       providers: [
         UpdateTradeServiceImpl,
         {
-          provide: 'TradeRepository',
+          provide: Tokens.TradeRepository,
           useValue: {
             findById: jest.fn().mockResolvedValue(trade),
             update: jest.fn().mockResolvedValue({ ...trade, status: params.status }),
@@ -57,7 +58,7 @@ describe('UpdateTradeService', () => {
     }).compile();
 
     sut = app.get<UpdateTradeServiceImpl>(UpdateTradeServiceImpl);
-    tradeRepository = app.get<TradeRepository>('TradeRepository');
+    tradeRepository = app.get<TradeRepository>(Tokens.TradeRepository);
   });
 
   it('should call the trade repository with trade id', async () => {

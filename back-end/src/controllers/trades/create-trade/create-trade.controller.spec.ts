@@ -10,6 +10,7 @@ import * as TradeBookDTO from './create-trade.dto';
 import { CreateTradeController } from './create-trade.controller';
 import { TradeStatus } from '@/domain/types';
 import { Trade } from '@/domain/entities';
+import { Tokens } from '@/settings/tokens';
 
 describe('CreateTradeController', () => {
   let createTradeController: CreateTradeController;
@@ -37,14 +38,14 @@ describe('CreateTradeController', () => {
       controllers: [CreateTradeController],
       providers: [
         {
-          provide: 'CreateTrade',
+          provide: Tokens.CreateTradeService,
           useValue: { create: jest.fn().mockResolvedValue(trade) },
         },
       ],
     }).compile();
 
     createTradeController = app.get<CreateTradeController>(CreateTradeController);
-    createTradeService = app.get<CreateTradeService>('CreateTrade');
+    createTradeService = app.get<CreateTradeService>(Tokens.CreateTradeService);
 
     params = {
       bookId: Crypto.randomBytes(16).toString('hex'),

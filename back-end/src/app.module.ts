@@ -11,18 +11,19 @@ import { CreateTradeController } from '@/controllers/trades/create-trade';
 import { UpdateTradeController } from '@/controllers/trades/update-trade';
 
 import { PrismaService, PrismaBookRepository, PrismaTradeRepository } from '@/repositories';
+import { Tokens } from './settings/tokens';
 
 @Module({
   imports: [],
   controllers: [CreateBookController, GetBookByIdController, CreateTradeController, UpdateTradeController],
   providers: [
     PrismaService,
-    { provide: 'CreateBook', useClass: CreateBookServiceImpl },
-    { provide: 'GetBookById', useClass: GetBookByIdServiceImpl },
-    { provide: 'CreateTrade', useClass: CreateTradeServiceImpl },
-    { provide: 'UpdateTrade', useClass: UpdateTradeServiceImpl },
-    { provide: 'BookRepository', useClass: PrismaBookRepository },
-    { provide: 'TradeRepository', useClass: PrismaTradeRepository },
+    { provide: Tokens.CreateBookService, useClass: CreateBookServiceImpl },
+    { provide: Tokens.GetBookByIdService, useClass: GetBookByIdServiceImpl },
+    { provide: Tokens.CreateTradeService, useClass: CreateTradeServiceImpl },
+    { provide: Tokens.UpdateTradeService, useClass: UpdateTradeServiceImpl },
+    { provide: Tokens.BookRepository, useClass: PrismaBookRepository },
+    { provide: Tokens.TradeRepository, useClass: PrismaTradeRepository },
   ],
 })
 export class AppModule {}

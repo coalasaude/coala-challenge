@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { faker } from '@faker-js/faker';
 
+import { Tokens } from '@/settings/tokens';
 import { BookRepository } from '@/repositories';
 import { Book } from '@/domain/entities';
 
@@ -23,14 +24,14 @@ describe('CreateBookService', () => {
       providers: [
         CreateBookServiceImpl,
         {
-          provide: 'BookRepository',
+          provide: Tokens.BookRepository,
           useValue: { create: jest.fn().mockImplementation((book: Book) => book) },
         },
       ],
     }).compile();
 
     sut = app.get<CreateBookServiceImpl>(CreateBookServiceImpl);
-    bookRepository = app.get<BookRepository>('BookRepository');
+    bookRepository = app.get<BookRepository>(Tokens.BookRepository);
 
     params = {
       title: faker.lorem.words(3),

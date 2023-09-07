@@ -1,14 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 
+import { Tokens } from '@/settings/tokens';
+import { Trade } from '@/domain/entities';
 import { NotFoundError } from '@/domain/errors';
-import { BookRepository, TradeRepository } from '@/repositories';
+import { TradeRepository } from '@/repositories';
 
 import { UpdateTradeService } from './update-trade.interface';
-import { Trade } from '@/domain/entities';
 
 @Injectable()
 export class UpdateTradeServiceImpl implements UpdateTradeService {
-  constructor(@Inject('TradeRepository') private readonly tradeRepository: TradeRepository) {}
+  constructor(@Inject(Tokens.TradeRepository) private readonly tradeRepository: TradeRepository) {}
 
   async update({ id, status }: UpdateTradeService.Params): Promise<UpdateTradeService.Response> {
     const trade = await this.tradeRepository.findById(id);

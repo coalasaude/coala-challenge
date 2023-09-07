@@ -3,10 +3,11 @@ import { Controller, Inject, Param, NotFoundException, Post, Body } from '@nestj
 import { CreateTradeService } from '@/services/trades/create-trade';
 
 import * as TradeBookDTO from './create-trade.dto';
+import { Tokens } from '@/settings/tokens';
 
 @Controller('/books/:id')
 export class CreateTradeController {
-  constructor(@Inject('CreateTrade') private readonly createTradeService: CreateTradeService) {}
+  constructor(@Inject(Tokens.CreateTradeService) private readonly createTradeService: CreateTradeService) {}
 
   @Post('/trades')
   async create(@Param('id') bookId: string, @Body() { message }: TradeBookDTO.Request): Promise<TradeBookDTO.Response> {

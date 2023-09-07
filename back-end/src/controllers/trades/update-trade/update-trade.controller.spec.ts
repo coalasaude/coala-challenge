@@ -1,15 +1,16 @@
 import * as Crypto from 'crypto';
+import { faker } from '@faker-js/faker';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { faker } from '@faker-js/faker';
 
+import { Tokens } from '@/settings/tokens';
 import { NotFoundError } from '@/domain/errors';
+import { TradeStatus } from '@/domain/types';
+import { Trade } from '@/domain/entities';
 import { UpdateTradeService } from '@/services/trades/update-trade';
 
 import * as UpdateTradeDTO from './update-trade.dto';
 import { UpdateTradeController } from './update-trade.controller';
-import { TradeStatus } from '@/domain/types';
-import { Trade } from '@/domain/entities';
 
 describe('UpdateTradeController', () => {
   let updateTradeController: UpdateTradeController;
@@ -37,7 +38,7 @@ describe('UpdateTradeController', () => {
       controllers: [UpdateTradeController],
       providers: [
         {
-          provide: 'UpdateTrade',
+          provide: Tokens.UpdateTradeService,
           useValue: {
             update: jest.fn().mockResolvedValue(trade),
           },
@@ -46,7 +47,7 @@ describe('UpdateTradeController', () => {
     }).compile();
 
     updateTradeController = app.get<UpdateTradeController>(UpdateTradeController);
-    updateTradeService = app.get<UpdateTradeService>('UpdateTrade');
+    updateTradeService = app.get<UpdateTradeService>(Tokens.UpdateTradeService);
 
     params = {
       id: Crypto.randomUUID(),
