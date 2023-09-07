@@ -8,11 +8,24 @@ datasource db {
 }
 
 model Books {
-  id          String  @id @default(uuid())
+  id          String   @id @default(uuid())
   title       String
   author      String
   description String
   publisher   String
   year        Int
   image       String?
+  trade       Trades[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Trades {
+  id        String   @id @default(uuid())
+  message   String
+  status    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Book      Books?   @relation(fields: [bookId], references: [id])
+  bookId    String?
 }
