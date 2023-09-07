@@ -7,4 +7,5 @@ export class Tokens {
 
   static readonly CreateBookService = Symbol.for('CreateBookService');
   static readonly GetBookByIdService = Symbol.for('GetBookByIdService');
+  static readonly SearchBooksService = Symbol.for('SearchBooksService');
 }
