@@ -1,10 +1,10 @@
 import { TradeStatus } from '@/domain/types';
 
-export interface TradeBook {
-  trade(params: TradeBook.Params): Promise<TradeBook.Response>;
+export interface CreateTrade {
+  create(params: CreateTrade.Params): Promise<CreateTrade.Response>;
 }
 
-export namespace TradeBook {
+export namespace CreateTrade {
   export type Params = {
     bookId: string;
     message: string;

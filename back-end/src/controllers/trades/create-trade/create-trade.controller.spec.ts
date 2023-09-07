@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { faker } from '@faker-js/faker';
 
 import { NotFoundError } from '@/domain/errors';
-import { TradeBook } from '@/services/books/trade-book';
+import { CreateTrade } from '@/services/trades/create-trade';
 
 import * as TradeBookDTO from './create-trade.dto';
 import { CreateTradeController } from './create-trade.controller';
@@ -13,7 +13,7 @@ import { Trade } from '@/domain/entities';
 
 describe('CreateTradeController', () => {
   let createTradeController: CreateTradeController;
-  let tradeBookService: TradeBook;
+  let tradeBookService: CreateTrade;
 
   let params: TradeBookDTO.Request & { bookId: string };
   let trade: Trade;
@@ -46,7 +46,7 @@ describe('CreateTradeController', () => {
     }).compile();
 
     createTradeController = app.get<CreateTradeController>(CreateTradeController);
-    tradeBookService = app.get<TradeBook>('TradeBook');
+    tradeBookService = app.get<CreateTrade>('TradeBook');
 
     params = {
       bookId: Crypto.randomBytes(16).toString('hex'),
@@ -57,7 +57,7 @@ describe('CreateTradeController', () => {
   describe('/books/:id/trade', () => {
     it('should call the TradeBookService with correct params', async () => {
       await createTradeController.trade(params.bookId, { message: params.message });
-      expect(tradeBookService.trade).toHaveBeenCalledWith(params);
+      expect(tradeBookService.create).toHaveBeenCalledWith(params);
     });
 
     it('should return not found exception', async () => {
