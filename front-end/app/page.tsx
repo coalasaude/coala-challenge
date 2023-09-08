@@ -7,13 +7,13 @@ export default function Home() {
       <Container>
         <Box position="relative" display="flex" justifyContent="center" alignItems="center" height="100vh">
           <Box position="absolute" top={0} right={0} mt={3}>
-            <Link href="/signup">
+            <Link href="/login">
               <Button variant="outlined" disableElevation sx={{ mr: 2 }}>
                 Entrar
               </Button>
             </Link>
 
-            <Link href="/login">
+            <Link href="/signup">
               <Button variant="contained" disableElevation>
                 Cadastrar
               </Button>
