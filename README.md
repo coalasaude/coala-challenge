@@ -52,3 +52,6 @@ Boa sorte e estou à disposição para esclarecer qualquer dúvida!
 
 WhatsApp: +5512996818163
 E-mail: rodrigoanselmo.dev@gmail.com
+
+**Mensagem Adicional:** 
+Gostaria de informar que vou me casar amanhã, dia 9/9, e por isso estou entregando este desafio um pouco antesga. Agradeço pela compreensão!
