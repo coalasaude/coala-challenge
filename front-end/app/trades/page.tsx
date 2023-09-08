@@ -1,8 +1,10 @@
 'use client';
 
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container, Grid, Typography } from '@mui/material';
 import TradeCard from './components/TradeCard';
 import { useEffect, useState } from 'react';
+import { getTrades } from './services/get-trades';
+import { updateTrade } from './services/update-trade';
 
 type Trade = {
   id: string;
@@ -19,23 +21,11 @@ export default function Trades() {
   const [requesterTrades, setRequesterTrades] = useState<Trade[]>([]);
 
   const handleAccept = async (tradeId: string) => {
-    const token = localStorage.getItem('token');
+    const isSuccessful = await updateTrade({ tradeId, status: 'ACCEPTED' });
 
-    const response = await fetch(`http://localhost:3001/trades/${tradeId}`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ status: 'ACCEPTED' }),
-    });
-
-    if (response.ok) {
+    if (isSuccessful) {
       const updatedTrades = ownerTrades.map((trade) => {
-        if (trade.id === tradeId) {
-          return { ...trade, status: 'ACCEPTED' };
-        }
-
+        if (trade.id === tradeId) return { ...trade, status: 'ACCEPTED' };
         return trade;
       });
 
@@ -44,23 +34,11 @@ export default function Trades() {
   };
 
   const handleRefuse = async (tradeId: string) => {
-    const token = localStorage.getItem('token');
+    const isSuccessful = await updateTrade({ tradeId, status: 'REJECTED' });
 
-    const response = await fetch(`http://localhost:3001/trades/${tradeId}`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ status: 'REJECTED' }),
-    });
-
-    if (response.ok) {
+    if (isSuccessful) {
       const updatedTrades = ownerTrades.map((trade) => {
-        if (trade.id === tradeId) {
-          return { ...trade, status: 'REJECTED' };
-        }
-
+        if (trade.id === tradeId) return { ...trade, status: 'REJECTED' };
         return trade;
       });
 
@@ -70,21 +48,11 @@ export default function Trades() {
 
   useEffect(() => {
     const fetchTrades = async () => {
-      const token = localStorage.getItem('token');
+      const owner = await getTrades('owner');
+      setOwnerTrades(owner.trades);
 
-      let response = await fetch('http://localhost:3001/trades?scope=owner', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      let data = await response.json();
-
-      if (response.ok) setOwnerTrades(data.trades);
-
-      response = await fetch('http://localhost:3001/trades?scope=requester', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      data = await response.json();
-
-      if (response.ok) setRequesterTrades(data.trades);
+      const requester = await getTrades('requester');
+      setRequesterTrades(requester.trades);
     };
 
     fetchTrades();
@@ -93,37 +61,35 @@ export default function Trades() {
   return (
     <Container>
       <Box mt={5}>
-        <Typography variant="h3" component="h1">
-          Trocas
-        </Typography>
-      </Box>
-
-      <Box mt={5}>
         <Typography variant="h5" component="p" mb={2}>
           Minhas trocas
         </Typography>
 
-        <Box display="flex" flexWrap="wrap" gap={2}>
+        <Grid container spacing={2}>
           {requesterTrades?.map((trade) => (
-            <TradeCard trade={trade} />
+            <Grid item xs={4}>
+              <TradeCard trade={trade} />
+            </Grid>
           ))}
-        </Box>
+        </Grid>
 
         <Box mt={10}>
           <Typography variant="h5" component="p" mb={2}>
             Trocas pendentes
           </Typography>
 
-          <Box display="flex" flexWrap="wrap" gap={2}>
+          <Grid container spacing={2}>
             {ownerTrades?.map((trade) => (
-              <TradeCard
-                trade={trade}
-                hasActions
-                onAccept={() => handleAccept(trade.id)}
-                onRefuse={() => handleRefuse(trade.id)}
-              />
+              <Grid item xs={4}>
+                <TradeCard
+                  trade={trade}
+                  hasActions
+                  onAccept={() => handleAccept(trade.id)}
+                  onRefuse={() => handleRefuse(trade.id)}
+                />
+              </Grid>
             ))}
-          </Box>
+          </Grid>
         </Box>
       </Box>
     </Container>

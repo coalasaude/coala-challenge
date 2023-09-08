@@ -2,9 +2,8 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
-import { Box, Container, Input, TextField, Typography } from '@mui/material';
+import { Box, Container, Input, Button, TextField, Typography } from '@mui/material';
 
-import Button from '@/components/Button';
 import { useRouter } from 'next/navigation';
 import { createBook } from './services/create-book';
 
@@ -31,11 +30,7 @@ export default function Book() {
 
   return (
     <Container>
-      <Box mt={5}>
-        <Typography variant="h3" component="h1">
-          Adicionar livro
-        </Typography>
-
+      <Box my={5}>
         <form onSubmit={handleSubmit}>
           <Box mt={5} display="flex" flexDirection="row" justifyContent="center" gap={5}>
             <Box>
@@ -132,10 +127,8 @@ export default function Book() {
               </Box>
 
               <Box width="100%" display="flex" justifyContent="flex-end" mt={5}>
-                <Button type="submit">
-                  <Typography variant="body1" component="span">
-                    Adicionar livro
-                  </Typography>
+                <Button variant="contained" type="submit" disableElevation>
+                  Adicionar livro
                 </Button>
               </Box>
             </Box>

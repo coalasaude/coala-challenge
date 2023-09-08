@@ -21,16 +21,12 @@ export default async function Book({ params }: Props) {
 
   return (
     <Container sx={{ pb: 10 }}>
-      <Box display="flex" justifyContent="space-between" alignItems="center" mt={5}>
-        <Back />
-      </Box>
-
       <Box mt={5} display="flex">
-        <Box width={300} height={450} minWidth={300} title={book.title} sx={{ background: '#ccc' }}>
+        <Box width={200} height={300} minWidth={200} title={book.title} sx={{ background: '#ccc' }}>
           {book.image && <Image src={book.image} alt="book" fill objectFit="cover" />}
         </Box>
 
-        <Box ml={15}>
+        <Box ml={5}>
           <Typography variant="h3" component="h1">
             {book.title}
           </Typography>
