@@ -13,7 +13,6 @@ Também foram incluídas as seguintes funcionalidades e características:
 - Inclusão de um arquivo de seed para inicializar o banco de dados com dados. Você pode executá-lo com o comando `yarn seed`.
 - Implantação do projeto usando Terraform na AWS para configurar uma instância EC2 e realizar builds. Você pode executá-lo com o comando `cd terraform`, `terraform init` e  `terraform apply`.
 - Utilização do padrão de repositório, entidades, adaptadores, casos de uso (use cases), DTOs e controle da API construído como REST API.
-- Implementação de documentação Swagger na rota: [Swagger API](https://test.simplesst.com/api).
 
 Foram criadas as seguintes rotas no back-end:
 
@@ -27,7 +26,7 @@ Foram criadas as seguintes rotas no back-end:
 - Criar interesse de troca.
 
 ## URL de Deploy
-Acesse a versão de produção da aplicação aqui: [URL de Deploy](https://coala-challenge-front.vercel.app/seus-livros)
+Acesse a versão de produção da aplicação aqui: [URL de Deploy](https://coala-challenge-front.vercel.app)
 
 ## Como Executar o Projeto Localmente
 Para executar o projeto localmente, siga os passos abaixo:
