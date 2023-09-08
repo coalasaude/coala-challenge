@@ -15,19 +15,6 @@ const theme = createTheme({
       textTransform: 'none',
     },
   },
-  palette: {
-    background: {
-      default: '#f5f5f5',
-    },
-
-    secondary: {
-      main: '#FFFFFF',
-    },
-
-    primary: {
-      main: '#6FA9E6',
-    },
-  },
 });
 
 export default theme;
