@@ -8,7 +8,7 @@ export class SearchTradesServiceImpl implements SearchTradesService {
   constructor(@Inject(Tokens.TradeRepository) private readonly tradeRepository: TradeRepository) {}
 
   async search(params: SearchTradesService.Params): Promise<SearchTradesService.Response> {
-    const trades = await this.tradeRepository.search(params);
+    const trades = await this.tradeRepository.search({ ...params, page: params.page ?? 1, limit: params.limit ?? 10 });
 
     return {
       pagination: trades.pagination,

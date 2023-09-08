@@ -1,6 +1,6 @@
 import { TradeStatus } from '@/books/domain/types';
 import { Transform } from 'class-transformer';
-import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional } from 'class-validator';
 
 enum Scope {
   REQUESTER = 'requester',

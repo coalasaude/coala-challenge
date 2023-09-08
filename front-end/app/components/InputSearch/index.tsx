@@ -1,53 +1,33 @@
 'use client';
+
 import { useRouter } from 'next/navigation';
 
-import { Box, InputBase, Button, FormControl } from '@mui/material';
+import { Box, InputBase } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
 export default function InputSearch() {
   const router = useRouter();
 
-  const handleInput = (event: React.KeyboardEvent) => {
-    console.log(event.key);
+  const handleInput = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      redirectToSearch('teste');
+      router.push(`/search?q=${event.currentTarget.value}`);
     }
-  };
-
-  const redirectToSearch = (q: string) => {
-    const searchParams = new URLSearchParams();
-    searchParams.set('q', q);
-
-    router.push(`/search?${searchParams.toString()}`);
   };
 
   return (
     <Box
-      border="1px solid #ccc"
-      borderRadius={1}
-      height="auto"
+      width="100%"
       display="flex"
       alignItems="center"
-      sx={{ background: '#F5F5F5' }}
+      sx={{
+        backgroundColor: '#fff',
+        border: '1px solid #ccc',
+        borderRadius: '4px',
+        p: 1,
+      }}
     >
-      <InputBase
-        placeholder="Search"
-        sx={{
-          backgroundColor: '#f5f5f5',
-          px: 2,
-          width: 400,
-        }}
-        onKeyDown={handleInput}
-      />
-
-      <Button
-        variant="contained"
-        disableElevation
-        disableRipple
-        sx={{ borderRadius: 0, whiteSpace: 'nowrap' }}
-        onClick={() => redirectToSearch('teste')}
-      >
-        Pesquisar
-      </Button>
+      <SearchIcon sx={{ mr: 1 }} htmlColor="#888" />
+      <InputBase placeholder="Buscar por livros" fullWidth onKeyDown={handleInput} />
     </Box>
   );
 }

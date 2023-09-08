@@ -1,24 +1,17 @@
 import Image from 'next/image';
+
 import { Box, Container, Typography } from '@mui/material';
-import Button from '@/components/Button';
+
+import { getBook } from './services/get-book-by-id';
+import Back from '@/components/Back';
+import TradeModal from './components/TradeModal';
 
 type Props = {
   params: { bookId: string };
 };
 
-async function getBook(bookId: string) {
-  return {
-    id: 1,
-    title: 'vinte mil léguas submarinas',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec euismod, nisl vitae aliquam ultricies, nunc nisl ultricies nunc, vitae aliquam nisl nisl vitae aliquam ultricies, nunc nisl ultricies nunc, vitae aliquam nisl',
-    image: '/book.jpg',
-  };
-}
-
 export async function generateMetadata({ params }: Props) {
   const book = await getBook(params.bookId);
-
   return { title: `Wormhole | ${book.title}` };
 }
 
@@ -27,10 +20,14 @@ export default async function Book({ params }: Props) {
   const book = await getBook(bookId);
 
   return (
-    <Container>
-      <Box mt={15} display="flex">
-        <Box sx={{ width: 400, height: 600, position: 'relative', minWidth: 400 }} title={book.title}>
-          <Image src={book.image} alt="book" fill objectFit="cover" />
+    <Container sx={{ pb: 10 }}>
+      <Box display="flex" justifyContent="space-between" alignItems="center" mt={5}>
+        <Back />
+      </Box>
+
+      <Box mt={5} display="flex">
+        <Box width={300} height={450} minWidth={300} title={book.title} sx={{ background: '#ccc' }}>
+          {book.image && <Image src={book.image} alt="book" fill objectFit="cover" />}
         </Box>
 
         <Box ml={15}>
@@ -44,7 +41,7 @@ export default async function Book({ params }: Props) {
             </Typography>
           </Box>
 
-          <Button sx={{ mt: 3 }}>Iniciar troca</Button>
+          <TradeModal bookId={bookId} />
         </Box>
       </Box>
     </Container>
