@@ -27,6 +27,8 @@ Foram criadas as seguintes rotas no back-end:
 
 ## URL de Deploy
 Acesse a versão de produção da aplicação aqui: [URL de Deploy](https://coala-challenge-front.vercel.app)
+Github Back: [Back](https://github.com/Rodrigobanselmo/coala-challenge-back)
+Github Front: [Front](https://github.com/Rodrigobanselmo/coala-challenge-front)
 
 ## Como Executar o Projeto Localmente
 Para executar o projeto localmente, siga os passos abaixo:
