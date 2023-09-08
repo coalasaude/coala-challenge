@@ -33,8 +33,8 @@ export class PrismaBookRepository implements BookRepository {
     };
   }
 
-  async getById({ id, userId }: GetByIdParams): Promise<Book> {
-    const book = await this.prismaService.books.findUnique({ where: { id, usersId: userId } });
+  async getById({ id }: GetByIdParams): Promise<Book> {
+    const book = await this.prismaService.books.findUnique({ where: { id } });
     return book && new Book({ ...book, user: book.usersId });
   }
 
