@@ -11,7 +11,7 @@ import { createBook } from '@/services/books/create-book';
 type BookForm = Partial<{
   title: string;
   publisher: string;
-  year?: number;
+  year: string;
   author: string;
   description: string;
   image?: string;
@@ -21,6 +21,7 @@ export default function Book() {
   const [book, setBook] = useState<BookForm>({
     title: '',
     publisher: '',
+    year: '',
     author: '',
     description: '',
   });
@@ -32,9 +33,26 @@ export default function Book() {
     setBook({ ...book, image: URL.createObjectURL(event.target.files[0]) });
   };
 
+  const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+
+    if (value.length > 4) return;
+
+    setBook({ ...book, year: value.replace(/\D/, '') });
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = await createBook(book as BookForm);
+
+    const data = await createBook({
+      title: book.title,
+      publisher: book.publisher,
+      year: Number(book.year),
+      author: book.author,
+      description: book.description,
+      image: book.image,
+    });
+
     router.push(`/books/${data.id}`);
   };
 
@@ -118,7 +136,8 @@ export default function Book() {
                   type="tel"
                   required
                   value={book.year}
-                  onChange={(event) => setBook({ ...book, year: Number(event.target.value) })}
+                  inputProps={{ pattern: '[0-9]{4}' }}
+                  onChange={handleYearChange}
                 />
               </Box>
 
