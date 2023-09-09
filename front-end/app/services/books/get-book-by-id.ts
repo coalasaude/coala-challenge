@@ -1,3 +1,5 @@
+import { api } from '../api';
+
 type Book = {
   id: string;
   title: string;
@@ -9,7 +11,6 @@ type Book = {
 };
 
 export async function getBook(bookId: string): Promise<Book> {
-  const response = await fetch(`http://localhost:3001/books/${bookId}`);
-  const book = await response.json();
-  return book;
+  const response = await api.get(`/books/${bookId}`);
+  return response.data;
 }

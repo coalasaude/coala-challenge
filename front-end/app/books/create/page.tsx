@@ -1,32 +1,49 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 import { Box, Container, Input, Button, TextField, Typography } from '@mui/material';
 
-import { useRouter } from 'next/navigation';
-import { createBook } from './services/create-book';
+import { createBook } from '@/services/books/create-book';
+import { useAuth } from '@/contexts/auth-context';
+
+type BookForm = Partial<{
+  title: string;
+  publisher: string;
+  year?: number;
+  author: string;
+  description: string;
+  image?: string;
+}>;
 
 export default function Book() {
-  const [title, setTitle] = useState<string>('');
-  const [publisher, setPublisher] = useState<string>('');
-  const [year, setYear] = useState<number>();
-  const [author, setAuthor] = useState<string>('');
-  const [description, setDescription] = useState<string>('');
-  const [picture, setPicture] = useState<string | null>(null);
+  const auth = useAuth();
+
+  const [book, setBook] = useState<BookForm>({
+    title: '',
+    publisher: '',
+    author: '',
+    description: '',
+  });
 
   const router = useRouter();
 
   const onChangePicture = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target?.files?.[0]) return;
-    setPicture(URL.createObjectURL(event.target?.files?.[0]));
+    setBook({ ...book, image: URL.createObjectURL(event.target.files[0]) });
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = await createBook({ title, publisher, year: year as number, author, description });
+    const data = await createBook(book as BookForm);
     router.push(`/books/${data.id}`);
   };
+
+  useEffect(() => {
+    auth.isAuthenticated || router.push('/login');
+  }, []);
 
   return (
     <Container>
@@ -35,7 +52,7 @@ export default function Book() {
           <Box mt={5} display="flex" flexDirection="row" justifyContent="center" gap={5}>
             <Box>
               <Typography variant="body1" component="label" htmlFor="book-cover" sx={{ cursor: 'pointer' }}>
-                {picture ? (
+                {book.image ? (
                   <Box
                     width={200}
                     height={300}
@@ -45,7 +62,7 @@ export default function Book() {
                     justifyContent="center"
                     alignItems="center"
                   >
-                    <Image src={picture} width={200} height={300} alt="Capa do livro" />
+                    <Image src={book.image} width={200} height={300} alt="Capa do livro" />
                   </Box>
                 ) : (
                   <Box p={2} sx={{ backgroundColor: '#FFFFFF', border: '1px solid #ccc', borderRadius: '4px' }}>
@@ -77,8 +94,8 @@ export default function Book() {
                   label="Título"
                   fullWidth
                   required
-                  value={title}
-                  onChange={(event) => setTitle(event.target.value)}
+                  value={book.title}
+                  onChange={(event) => setBook({ ...book, title: event.target.value })}
                 />
                 <TextField
                   variant="outlined"
@@ -86,8 +103,8 @@ export default function Book() {
                   label="Autor"
                   fullWidth
                   required
-                  value={author}
-                  onChange={(event) => setAuthor(event.target.value)}
+                  value={book.author}
+                  onChange={(event) => setBook({ ...book, author: event.target.value })}
                 />
               </Box>
 
@@ -98,8 +115,8 @@ export default function Book() {
                   label="Editora"
                   fullWidth
                   required
-                  value={publisher}
-                  onChange={(event) => setPublisher(event.target.value)}
+                  value={book.publisher}
+                  onChange={(event) => setBook({ ...book, publisher: event.target.value })}
                 />
                 <TextField
                   variant="outlined"
@@ -107,8 +124,8 @@ export default function Book() {
                   label="Ano"
                   type="tel"
                   required
-                  value={year}
-                  onChange={(event) => setYear(Number(event.target.value))}
+                  value={book.year}
+                  onChange={(event) => setBook({ ...book, year: Number(event.target.value) })}
                 />
               </Box>
 
@@ -121,8 +138,8 @@ export default function Book() {
                   minRows={5}
                   fullWidth
                   required
-                  value={description}
-                  onChange={(event) => setDescription(event.target.value)}
+                  value={book.description}
+                  onChange={(event) => setBook({ ...book, description: event.target.value })}
                 />
               </Box>
 

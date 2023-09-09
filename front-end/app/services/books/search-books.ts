@@ -1,3 +1,5 @@
+import { api } from '../api';
+
 type Pagination = {
   page: number;
   limit: number;
@@ -15,9 +17,7 @@ type SearchBookResponse = {
   books: Book[];
 };
 
-export async function getBooks(q: string) {
-  const response = await fetch(`http://localhost:3001/books?q=${q}`);
-  const data: SearchBookResponse = await response.json();
-
-  return data.books;
+export async function searchBooks(q: string): Promise<Book[]> {
+  const response = await api.get<SearchBookResponse>(`/books?q=${q}`);
+  return response.data.books;
 }

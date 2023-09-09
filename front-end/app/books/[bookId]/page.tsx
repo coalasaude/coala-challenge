@@ -2,8 +2,7 @@ import Image from 'next/image';
 
 import { Box, Container, Typography } from '@mui/material';
 
-import { getBook } from './services/get-book-by-id';
-import Back from '@/components/Back';
+import { getBook } from '@/services/books/get-book-by-id';
 import TradeModal from './components/TradeModal';
 
 type Props = {

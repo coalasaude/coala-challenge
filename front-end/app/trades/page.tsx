@@ -3,8 +3,8 @@
 import { Box, Container, Grid, Typography } from '@mui/material';
 import TradeCard from './components/TradeCard';
 import { useEffect, useState } from 'react';
-import { getTrades } from './services/get-trades';
-import { updateTrade } from './services/update-trade';
+import { getTrades } from '@/services/trades/get-trades';
+import { updateTrade } from '@/services/trades/update-trade';
 
 type Trade = {
   id: string;
@@ -67,7 +67,7 @@ export default function Trades() {
 
         <Grid container spacing={2}>
           {requesterTrades?.map((trade) => (
-            <Grid item xs={4}>
+            <Grid item xs={4} key={trade.id}>
               <TradeCard trade={trade} />
             </Grid>
           ))}
@@ -80,7 +80,7 @@ export default function Trades() {
 
           <Grid container spacing={2}>
             {ownerTrades?.map((trade) => (
-              <Grid item xs={4}>
+              <Grid item xs={4} key={trade.id}>
                 <TradeCard
                   trade={trade}
                   hasActions

@@ -1,15 +1,20 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Alert, Box, Button, Modal, TextField, Typography } from '@mui/material';
-import { createTrade } from '../../services/create-trade';
+
+import { createTrade } from '@/services/trades/create-trade';
+import { useAuth } from '@/contexts/auth-context';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   bookId: string;
 };
 
 export default function TradeModal({ bookId }: Props) {
+  const auth = useAuth();
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -26,12 +31,19 @@ export default function TradeModal({ bookId }: Props) {
 
     if (data.error?.message) {
       setError(data.error.message);
+      setIsLoading(false);
       return;
     }
 
     setIsLoading(false);
     handleClose();
   };
+
+  useEffect(() => {
+    if (open) {
+      !auth.isAuthenticated && router.push('/login');
+    }
+  }, [open]);
 
   return (
     <>

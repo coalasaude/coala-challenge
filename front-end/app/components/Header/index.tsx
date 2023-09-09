@@ -4,9 +4,10 @@ import Link from 'next/link';
 
 import { AppBar, Box, Button, Container, Typography } from '@mui/material';
 import Menu from './Menu';
+import { useAuth } from '@/contexts/auth-context';
 
 export default function Header() {
-  const isLogged = !!localStorage.getItem('token');
+  const auth = useAuth();
 
   return (
     <AppBar position="sticky" color="transparent" elevation={0} sx={{ bgcolor: '#fff', border: '1px solid #ccc' }}>
@@ -19,7 +20,7 @@ export default function Header() {
           </Typography>
 
           <Box ml="auto" display="flex" alignItems="center">
-            {isLogged ? (
+            {auth.isAuthenticated ? (
               <Menu />
             ) : (
               <>

@@ -1,9 +1,9 @@
-import { AppBar, Box, Button, Container, Typography } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 
 import Banner from '@/components/Banner';
 import InputSearch from '@/components/InputSearch';
 
-import { getBooks } from './services/search-books';
+import { searchBooks } from '@/services/books/search-books';
 
 type Props = {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -11,7 +11,7 @@ type Props = {
 
 export default async function Search({ searchParams }: Props) {
   const query = searchParams.q as string;
-  const books = await getBooks(searchParams.q as string);
+  const books = await searchBooks(searchParams.q as string);
 
   return (
     <Container sx={{ pb: 20 }}>

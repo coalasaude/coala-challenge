@@ -6,15 +6,17 @@ import { Alert, Box, Container, FormControl, Button, TextField, Typography } fro
 
 import Back from '@/components/Back';
 import { useRouter } from 'next/navigation';
-import { signup } from '../services/singup';
-import { login } from '../services/login';
+import { signup } from '@/services/auth/singup';
+import { useAuth } from '@/contexts/auth-context';
 
 export default function Login() {
+  const auth = useAuth();
+
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const [error, setError] = useState('');
+  const [error, setError] = useState<string | undefined>('');
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
@@ -24,18 +26,8 @@ export default function Login() {
 
     try {
       setIsLoading(true);
-      const signupResponse = await signup({ name, username, password });
-
-      if (signupResponse.error?.statusCode === 400 && signupResponse.error?.message === 'User already exists') {
-        setError('Usuário já existe');
-        return;
-      }
-
-      const loginResponse = await login({ username, password });
-
-      localStorage.setItem('token', loginResponse.data?.access_token as string);
-
-      router.push('/search?q=');
+      const error = await auth.signup({ name, username, password });
+      if (error) setError(error.error);
     } catch {
       setError('Erro ao cadastrar usuário');
     } finally {

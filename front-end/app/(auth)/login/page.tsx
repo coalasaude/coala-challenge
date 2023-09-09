@@ -1,39 +1,33 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 import { Alert, Box, Container, FormControl, Button, TextField, Typography } from '@mui/material';
 
 import Back from '@/components/Back';
-import { useRouter } from 'next/navigation';
-import { login } from '../services/login';
+import { useAuth } from '@/contexts/auth-context';
 
 export default function Login() {
+  const { login } = useAuth();
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string | undefined>('');
   const [isLoading, setIsLoading] = useState(false);
-
-  const router = useRouter();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     try {
       setIsLoading(true);
-      const response = await login({ username, password });
+      const error = await login({ username, password });
 
-      if (response.error) {
-        setError(true);
-        return;
-      }
-
-      localStorage.setItem('token', response.data?.access_token as string);
-
-      router.push('/search?q=');
-    } catch {
-      setError(true);
+      if (error) setError(error.error);
+    } catch (error) {
+      console.log(error);
+      setError('Usuário ou senha incorretos');
     } finally {
       setIsLoading(false);
     }
@@ -108,9 +102,11 @@ export default function Login() {
               {isLoading ? 'Carregando...' : 'Entrar'}
             </Button>
 
-            <Button variant="text" sx={{ mt: 1, width: '100%' }} onClick={() => router.push('/signup')}>
-              Cadastrar
-            </Button>
+            <Link href="/signup">
+              <Button variant="text" sx={{ mt: 1, width: '100%' }}>
+                Cadastrar
+              </Button>
+            </Link>
           </Box>
         </form>
       </Box>

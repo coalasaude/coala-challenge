@@ -3,10 +3,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Link, MenuItem, Menu as MuiMenu } from '@mui/material';
+import { logout } from '@/contexts/auth-context';
 
 export default function Menu() {
-  const router = useRouter();
-
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -19,8 +18,7 @@ export default function Menu() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    router.refresh();
+    logout();
   };
 
   return (

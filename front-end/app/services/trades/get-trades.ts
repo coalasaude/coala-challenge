@@ -1,3 +1,5 @@
+import { api } from '../api';
+
 type Trade = {
   id: string;
   status: string;
@@ -13,15 +15,6 @@ type GetTradeResponse = {
 };
 
 export async function getTrades(scope: 'requester' | 'owner'): Promise<GetTradeResponse> {
-  const token = localStorage.getItem('token');
-
-  const response = await fetch(`http://localhost:3001/trades?scope=${scope}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  const data = await response.json();
-
-  return data;
+  const response = await api.get<GetTradeResponse>('/trades');
+  return response.data;
 }
