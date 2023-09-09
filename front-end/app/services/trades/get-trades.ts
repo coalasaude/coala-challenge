@@ -15,6 +15,6 @@ type GetTradeResponse = {
 };
 
 export async function getTrades(scope: 'requester' | 'owner'): Promise<GetTradeResponse> {
-  const response = await api.get<GetTradeResponse>('/trades');
+  const response = await api.get<GetTradeResponse>(`/trades?scope=${scope}`);
   return response.data;
 }

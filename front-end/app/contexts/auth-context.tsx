@@ -1,8 +1,8 @@
 'use client';
 import { api } from '@/services/api';
-import { isAuthenticated } from '@/services/auth/is-authenticated';
+import { getUser } from '@/services/auth/get-user';
 import { useRouter } from 'next/navigation';
-import { setCookie, destroyCookie } from 'nookies';
+import { setCookie, destroyCookie, parseCookies } from 'nookies';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 type LoginParams = {
@@ -20,17 +20,24 @@ type LoginResponse = {
   error: string;
 };
 
+type User = {
+  id: string;
+  name: string;
+  username: string;
+};
+
 const AuthContext = createContext({
   isAuthenticated: false,
   login: async (params: LoginParams): Promise<LoginResponse | undefined> => undefined,
   signup: async (params: SignupParams): Promise<LoginResponse | undefined> => undefined,
   logout: () => undefined,
+  user: {} as User | undefined,
 });
 
 let authChannel: BroadcastChannel;
 
 export const logout = (): undefined => {
-  destroyCookie(null, 'auth.token');
+  destroyCookie(null, 'auth.token', { path: '/' });
   delete api.defaults.headers.Authorization;
   authChannel.postMessage('logout');
 };
@@ -38,12 +45,12 @@ export const logout = (): undefined => {
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
-  const [isAuth, setIsAuth] = useState(false);
+  const [user, setUser] = useState<User | undefined>();
 
   useEffect(() => {
     const loadUser = async () => {
-      const isAuth = await isAuthenticated();
-      setIsAuth(isAuth);
+      const user = await getUser();
+      if (user) setUser(user);
     };
 
     loadUser();
@@ -53,7 +60,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     authChannel.onmessage = (message) => {
       const mapping: Record<string, any> = {
         logout: () => {
-          setIsAuth(false);
+          setUser(undefined);
           router.push('/');
         },
       };
@@ -83,16 +90,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       api.defaults.headers.Authorization = `Bearer ${data.access_token}`;
 
-      setIsAuth(true);
       router.push('/');
     } catch (error) {
-      setIsAuth(false);
       return { error: 'Usuário ou senha inválidos' };
     }
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated: isAuth, login, signup, logout }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ isAuthenticated: !!user, user, login, signup, logout }}>
+      {children}
+    </AuthContext.Provider>
   );
 }
 

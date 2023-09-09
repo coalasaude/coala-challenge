@@ -7,7 +7,6 @@ import Image from 'next/image';
 import { Box, Container, Input, Button, TextField, Typography } from '@mui/material';
 
 import { createBook } from '@/services/books/create-book';
-import { useAuth } from '@/contexts/auth-context';
 
 type BookForm = Partial<{
   title: string;
@@ -19,8 +18,6 @@ type BookForm = Partial<{
 }>;
 
 export default function Book() {
-  const auth = useAuth();
-
   const [book, setBook] = useState<BookForm>({
     title: '',
     publisher: '',
@@ -40,10 +37,6 @@ export default function Book() {
     const data = await createBook(book as BookForm);
     router.push(`/books/${data.id}`);
   };
-
-  useEffect(() => {
-    auth.isAuthenticated || router.push('/login');
-  }, []);
 
   return (
     <Container>
