@@ -2,9 +2,8 @@
 
 import { useState } from 'react';
 
-import { Alert, Box, Container, FormControl, InputBase, Typography } from '@mui/material';
+import { Alert, Box, Container, FormControl, Button, TextField, Typography } from '@mui/material';
 
-import Button from '@/components/Button';
 import Back from '@/components/Back';
 import { useRouter } from 'next/navigation';
 import { login } from '../services/login';
@@ -50,7 +49,7 @@ export default function Login() {
         alignItems="center"
         height="100vh"
       >
-        <Box mt={5} position="absolute" top={0} left={0}>
+        <Box mt={3} position="absolute" top={0} left={0}>
           <Back />
         </Box>
 
@@ -59,52 +58,58 @@ export default function Login() {
         </Typography>
 
         <form onSubmit={handleSubmit}>
-          <Box width="100%" display="flex" flexDirection="column" gap={2}>
-            {error && <Alert severity="error">Usuário ou senha incorretos</Alert>}
-            <Box>
-              <Typography variant="body1" component="label" sx={{ color: '#666' }}>
-                Usuário
-              </Typography>
-              <InputBase
+          <Box
+            width="100%"
+            display="flex"
+            flexDirection="column"
+            gap={2}
+            border="1px solid #ccc"
+            borderRadius={1}
+            p={4}
+            sx={{ bgcolor: '#fff' }}
+          >
+            {error && (
+              <Alert severity="error" sx={{ mb: 1 }}>
+                Usuário ou senha incorretos
+              </Alert>
+            )}
+
+            <FormControl>
+              <TextField
                 type="text"
-                placeholder="Nome de usuário"
+                label="Usuário"
                 fullWidth
+                size="small"
                 value={username}
                 onChange={(event) => setUsername(event.target.value)}
                 required
-                sx={{
-                  width: '100%',
-                  backgroundColor: '#fff',
-                  border: '1px solid #ccc',
-                  borderRadius: 1,
-                  p: 1,
-                }}
               />
-            </Box>
+            </FormControl>
 
-            <Box>
-              <Typography variant="body1" component="label" sx={{ color: '#666' }}>
-                Senha
-              </Typography>
-              <InputBase
+            <FormControl>
+              <TextField
                 type="password"
-                placeholder="Senha"
+                label="Senha"
                 fullWidth
+                size="small"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 required
-                sx={{
-                  width: '100%',
-                  backgroundColor: '#fff',
-                  border: '1px solid #ccc',
-                  borderRadius: 1,
-                  p: 1,
-                }}
               />
-            </Box>
+            </FormControl>
 
-            <Button type="submit" sx={{ mt: 2, width: '100%' }} disabled={isLoading}>
+            <Button
+              disableElevation
+              variant="contained"
+              type="submit"
+              sx={{ mt: 1, width: '100%' }}
+              disabled={isLoading}
+            >
               {isLoading ? 'Carregando...' : 'Entrar'}
+            </Button>
+
+            <Button variant="text" sx={{ mt: 1, width: '100%' }} onClick={() => router.push('/signup')}>
+              Cadastrar
             </Button>
           </Box>
         </form>
