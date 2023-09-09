@@ -2,12 +2,12 @@ import { Public } from '@/auth/decorators';
 import { BadRequestException, Body, Controller, Inject, Post } from '@nestjs/common';
 
 import * as CreateUserDTO from './create-user.dto';
-import { CreateUserService } from '@/users/services';
+import { CreateUserUseCase } from '@/users/use-cases';
 import { Tokens } from '@/users/settings/tokens';
 
 @Controller('/users')
 export class CreateUserController {
-  constructor(@Inject(Tokens.CreateUserService) private readonly createUserService: CreateUserService) {}
+  constructor(@Inject(Tokens.CreateUserUseCase) private readonly createUserService: CreateUserUseCase) {}
 
   @Public()
   @Post()

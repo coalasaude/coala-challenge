@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 
 import { Tokens } from '@/users/settings/tokens';
 
-import { CreateUserServiceImpl, FindUserServiceImpl } from '@/users/services';
+import { CreateUserUseCaseImpl, FindUserUseCaseImpl } from '@/users/use-cases';
 
 import { CreateUserController } from '@/users/controllers';
 import { CommonModule } from '@/common/common.module';
@@ -13,10 +13,10 @@ import { MeController } from './controllers/me';
   imports: [CommonModule],
   controllers: [CreateUserController, MeController],
   providers: [
-    { provide: Tokens.CreateUserService, useClass: CreateUserServiceImpl },
-    { provide: Tokens.FindUserService, useClass: FindUserServiceImpl },
+    { provide: Tokens.CreateUserUseCase, useClass: CreateUserUseCaseImpl },
+    { provide: Tokens.FindUserUseCase, useClass: FindUserUseCaseImpl },
     { provide: Tokens.UserRepository, useClass: PrismaUserRepository },
   ],
-  exports: [Tokens.FindUserService],
+  exports: [Tokens.FindUserUseCase],
 })
 export class UsersModule {}

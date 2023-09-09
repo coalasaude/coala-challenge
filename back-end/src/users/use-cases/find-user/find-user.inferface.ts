@@ -1,8 +1,8 @@
-export interface FindUserService {
-  findByUsername(params: FindUserService.Params): Promise<FindUserService.Response>;
+export interface FindUserUseCase {
+  findByUsername(params: FindUserUseCase.Params): Promise<FindUserUseCase.Response>;
 }
 
-export namespace FindUserService {
+export namespace FindUserUseCase {
   export type Params = {
     username: string;
   };

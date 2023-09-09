@@ -9,16 +9,16 @@ import { UserAlreadyExistsError } from '@/users/domain/errors';
 import { Encrypter } from '@/common/encrypter';
 import { UserRepository } from '@/users/repositories/users';
 
-import { CreateUserService } from './create-user.inferface';
+import { CreateUserUseCase } from './create-user.inferface';
 
 @Injectable()
-export class CreateUserServiceImpl implements CreateUserService {
+export class CreateUserUseCaseImpl implements CreateUserUseCase {
   constructor(
     @Inject(Tokens.UserRepository) private readonly userRepository: UserRepository,
     @Inject(CommonTokens.Encrypter) private readonly encrypter: Encrypter,
   ) {}
 
-  async create(params: CreateUserService.Params): Promise<CreateUserService.Response> {
+  async create(params: CreateUserUseCase.Params): Promise<CreateUserUseCase.Response> {
     const userExists = await this.userRepository.findByUsername(params.username);
     if (userExists) {
       throw new UserAlreadyExistsError();

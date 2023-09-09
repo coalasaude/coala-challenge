@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import { FindUserService } from '@/users/services';
+import { FindUserUseCase } from '@/users/use-cases';
 import { Tokens } from '@/users/settings/tokens';
 import { Tokens as CommonTokens } from '@/common/settings/tokens';
 import { Encrypter } from '@/common/encrypter';
@@ -9,7 +9,7 @@ import { Encrypter } from '@/common/encrypter';
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(Tokens.FindUserService) private findUserService: FindUserService,
+    @Inject(Tokens.FindUserUseCase) private findUserService: FindUserUseCase,
     @Inject(CommonTokens.Encrypter) private encrypter: Encrypter,
     private jwtService: JwtService,
   ) {}

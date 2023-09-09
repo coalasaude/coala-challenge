@@ -1,8 +1,8 @@
-export interface CreateUserService {
-  create(params: CreateUserService.Params): Promise<CreateUserService.Response>;
+export interface CreateUserUseCase {
+  create(params: CreateUserUseCase.Params): Promise<CreateUserUseCase.Response>;
 }
 
-export namespace CreateUserService {
+export namespace CreateUserUseCase {
   export type Params = {
     name: string;
     username: string;

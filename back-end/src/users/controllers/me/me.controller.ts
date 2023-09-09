@@ -2,16 +2,16 @@ import { BadRequestException, Controller, Get, Inject, Req } from '@nestjs/commo
 
 import * as MeDTO from './me.dto';
 import { Tokens } from '@/users/settings/tokens';
-import { FindUserService } from '@/users/services';
+import { FindUserUseCase } from '@/users/use-cases';
 
 @Controller('/users')
 export class MeController {
-  constructor(@Inject(Tokens.FindUserService) private readonly findUserService: FindUserService) {}
+  constructor(@Inject(Tokens.FindUserUseCase) private readonly findUserUseCase: FindUserUseCase) {}
 
   @Get('/me')
   async getMe(@Req() request): Promise<MeDTO.Response> {
     try {
-      const user = await this.findUserService.findByUsername({ username: request.user.username });
+      const user = await this.findUserUseCase.findByUsername({ username: request.user.username });
       return {
         id: user.id,
         name: user.name,

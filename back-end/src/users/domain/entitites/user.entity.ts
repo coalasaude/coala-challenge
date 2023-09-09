@@ -1,3 +1,5 @@
+import * as Crypto from 'crypto';
+
 type UserConstructor = {
   id?: string;
   name: string;
@@ -12,7 +14,7 @@ export class User {
   password: string;
 
   constructor(params: UserConstructor) {
-    this.id = params.id;
+    this.id = params.id || Crypto.randomUUID();
     this.name = params.name;
     this.username = params.username;
     this.password = params.password;
