@@ -1,18 +1,18 @@
-import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
+import { faker } from '@faker-js/faker';
 
 import { Tokens } from '@/books/settings/tokens';
+import { BookRepository } from '@/books/repositories';
 import { Book } from '@/books/domain/entities';
-import { SearchBooksUseCase } from '@/books/use-cases/books';
 
-import * as SearchBooksDTO from './search-books.dto';
-import { SearchBooksController } from './search-books.controller';
+import { SearchBooksUseCaseImpl } from './search-books.service';
+import { SearchBooksUseCase } from './search-books.interface';
 
-describe('SearchBooksController', () => {
-  let controller: SearchBooksController;
-  let useCase: SearchBooksUseCase;
+describe('GetBookByIdService', () => {
+  let sut: SearchBooksUseCaseImpl;
+  let bookRepository: BookRepository;
 
-  let params: SearchBooksDTO.SearchParams;
+  let params: SearchBooksUseCase.Params;
   let book: Book;
 
   beforeEach(async () => {
@@ -23,15 +23,13 @@ describe('SearchBooksController', () => {
       description: faker.lorem.paragraph(),
       publisher: faker.company.name(),
       year: faker.number.int({ min: 1900, max: 2023 }),
-      image: faker.image.url(),
-      user: faker.string.uuid(),
     });
 
     const app: TestingModule = await Test.createTestingModule({
-      controllers: [SearchBooksController],
       providers: [
+        SearchBooksUseCaseImpl,
         {
-          provide: Tokens.SearchBooksUseCase,
+          provide: Tokens.BookRepository,
           useValue: {
             search: jest.fn().mockResolvedValue({
               pagination: { page: 1, limit: 10, total: 3 },
@@ -42,8 +40,8 @@ describe('SearchBooksController', () => {
       ],
     }).compile();
 
-    controller = app.get<SearchBooksController>(SearchBooksController);
-    useCase = app.get<SearchBooksUseCase>(Tokens.SearchBooksUseCase);
+    sut = app.get<SearchBooksUseCaseImpl>(SearchBooksUseCaseImpl);
+    bookRepository = app.get<BookRepository>(Tokens.BookRepository);
 
     params = {
       limit: faker.number.int({ min: 1, max: 10 }),
@@ -52,17 +50,22 @@ describe('SearchBooksController', () => {
     };
   });
 
-  it('should call the searchBooksService', async () => {
-    await controller.create(params);
-    expect(useCase.search).toHaveBeenCalledWith(params);
+  it('should call BookRepository.search with the correct params', async () => {
+    await sut.search(params);
+
+    expect(bookRepository.search).toHaveBeenCalledWith(params);
   });
 
   it('should return the books', async () => {
-    const got = await controller.create(params);
+    const got = await sut.search(params);
 
     const expected = {
       pagination: { page: 1, limit: 10, total: 3 },
-      books: [book, book, book],
+      books: [
+        { id: book.id, title: book.title, image: book.image },
+        { id: book.id, title: book.title, image: book.image },
+        { id: book.id, title: book.title, image: book.image },
+      ],
     };
 
     expect(got).toEqual(expected);

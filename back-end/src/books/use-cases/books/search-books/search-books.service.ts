@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { SearchBooksService } from './search-books.interface';
+import { SearchBooksUseCase } from './search-books.interface';
 import { Tokens } from '@/books/settings/tokens';
 import { BookRepository } from '@/books/repositories';
 
 @Injectable()
-export class SearchBooksServiceImpl implements SearchBooksService {
+export class SearchBooksUseCaseImpl implements SearchBooksUseCase {
   constructor(@Inject(Tokens.BookRepository) private readonly bookRepository: BookRepository) {}
 
-  async search({ q, page, limit }: SearchBooksService.Params): Promise<SearchBooksService.Response> {
+  async search({ q, page, limit }: SearchBooksUseCase.Params): Promise<SearchBooksUseCase.Response> {
     const books = await this.bookRepository.search({ q, page: page ?? 1, limit: limit ?? 10 });
 
     return {

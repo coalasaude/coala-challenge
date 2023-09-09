@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { Tokens } from '@/books/settings/tokens';
 import { Trade } from '@/books/domain/entities';
-import { NotFoundError } from '@/books/domain/errors';
+import { CannotUpdateTradeError, NotFoundError } from '@/books/domain/errors';
 import { TradeRepository } from '@/books/repositories';
 
 import { UpdateTradeService } from './update-trade.interface';
@@ -16,7 +16,8 @@ export class UpdateTradeServiceImpl implements UpdateTradeService {
 
     if (!trade) throw new NotFoundError('Trade not found');
 
-    if (userId !== trade.book.user) throw new NotFoundError('Trade not found 2');
+    const ioBookOwner = trade.book.user === userId;
+    if (!ioBookOwner) throw new CannotUpdateTradeError();
 
     trade.status = status;
     await this.tradeRepository.update(trade);

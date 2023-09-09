@@ -2,13 +2,13 @@ import { Controller, Get, Inject, Query } from '@nestjs/common';
 
 import { Public } from '@/auth/decorators';
 import { Tokens } from '@/books/settings/tokens';
-import { SearchBooksService } from '@/books/services/books';
+import { SearchBooksUseCase } from '@/books/use-cases/books';
 
 import { SearchParams, Response } from './search-books.dto';
 
 @Controller('/books')
 export class SearchBooksController {
-  constructor(@Inject(Tokens.SearchBooksService) private readonly searchBooksService: SearchBooksService) {}
+  constructor(@Inject(Tokens.SearchBooksUseCase) private readonly searchBooksService: SearchBooksUseCase) {}
 
   @Public()
   @Get()

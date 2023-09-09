@@ -1,13 +1,13 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { SearchTradesService } from './search-trades.interface';
+import { SearchTradesUseCase } from './search-trades.interface';
 import { Tokens } from '@/books/settings/tokens';
 import { TradeRepository } from '@/books/repositories';
 
 @Injectable()
-export class SearchTradesServiceImpl implements SearchTradesService {
+export class SearchTradesUseCaseImpl implements SearchTradesUseCase {
   constructor(@Inject(Tokens.TradeRepository) private readonly tradeRepository: TradeRepository) {}
 
-  async search(params: SearchTradesService.Params): Promise<SearchTradesService.Response> {
+  async search(params: SearchTradesUseCase.Params): Promise<SearchTradesUseCase.Response> {
     const trades = await this.tradeRepository.search({ ...params, page: params.page ?? 1, limit: params.limit ?? 10 });
 
     return {

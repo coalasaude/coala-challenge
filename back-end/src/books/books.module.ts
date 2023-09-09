@@ -5,8 +5,8 @@ import { Tokens } from '@/books/settings/tokens';
 import { CreateBookController, GetBookByIdController, SearchBooksController } from '@/books/controllers/books';
 import { CreateTradeController, SearchTradesController, UpdateTradeController } from '@/books/controllers/trades';
 
-import { CreateBookServiceImpl, GetBookByIdServiceImpl, SearchBooksServiceImpl } from '@/books/services/books';
-import { CreateTradeServiceImpl, SearchTradesServiceImpl, UpdateTradeServiceImpl } from '@/books/services/trades';
+import { CreateBookUseCaseImpl, GetBookByIdUseCaseImpl, SearchBooksUseCaseImpl } from '@/books/use-cases/books';
+import { CreateTradeUseCaseImpl, SearchTradesUseCaseImpl, UpdateTradeServiceImpl } from '@/books/use-cases/trades';
 
 import { PrismaBookRepository, PrismaTradeRepository } from '@/books/repositories';
 
@@ -23,12 +23,12 @@ import { CommonModule } from '@/common/common.module';
     SearchTradesController,
   ],
   providers: [
-    { provide: Tokens.CreateBookService, useClass: CreateBookServiceImpl },
-    { provide: Tokens.GetBookByIdService, useClass: GetBookByIdServiceImpl },
-    { provide: Tokens.CreateTradeService, useClass: CreateTradeServiceImpl },
-    { provide: Tokens.UpdateTradeService, useClass: UpdateTradeServiceImpl },
-    { provide: Tokens.SearchBooksService, useClass: SearchBooksServiceImpl },
-    { provide: Tokens.SearchTradesService, useClass: SearchTradesServiceImpl },
+    { provide: Tokens.CreateBookUseCase, useClass: CreateBookUseCaseImpl },
+    { provide: Tokens.GetBookByIdUseCase, useClass: GetBookByIdUseCaseImpl },
+    { provide: Tokens.CreateTradeUseCase, useClass: CreateTradeUseCaseImpl },
+    { provide: Tokens.UpdateTradeUseCase, useClass: UpdateTradeServiceImpl },
+    { provide: Tokens.SearchBooksUseCase, useClass: SearchBooksUseCaseImpl },
+    { provide: Tokens.SearchTradesUseCase, useClass: SearchTradesUseCaseImpl },
     { provide: Tokens.BookRepository, useClass: PrismaBookRepository },
     { provide: Tokens.TradeRepository, useClass: PrismaTradeRepository },
   ],

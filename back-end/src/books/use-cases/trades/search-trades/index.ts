@@ -1,2 +1,2 @@
 export * from './search-trades.interface';
-export * from './search-trades.service';
+export * from './search-trades.usecase';

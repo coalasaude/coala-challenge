@@ -5,24 +5,24 @@ import { Tokens } from '@/books/settings/tokens';
 import { BookRepository } from '@/books/repositories';
 import { Book } from '@/books/domain/entities';
 
-import { CreateBookServiceImpl } from './create-book.service';
-import { CreateBookService } from './create-book.interface';
+import { CreateBookUseCaseImpl } from './create-book.usecase';
+import { CreateBookUseCase } from './create-book.interface';
 
 jest.mock('crypto', () => ({
   ...jest.requireActual('crypto'),
-  randomUUID: jest.fn().mockReturnValue('bc5c8e33-a815-4c77-9268-6363ee95529a'),
+  randomUUID: jest.fn().mockReturnValue('randomUUID'),
 }));
 
 describe('CreateBookService', () => {
-  let sut: CreateBookServiceImpl;
+  let sut: CreateBookUseCaseImpl;
   let bookRepository: BookRepository;
 
-  let params: CreateBookService.Params;
+  let params: CreateBookUseCase.Params;
 
   beforeEach(async () => {
     const app: TestingModule = await Test.createTestingModule({
       providers: [
-        CreateBookServiceImpl,
+        CreateBookUseCaseImpl,
         {
           provide: Tokens.BookRepository,
           useValue: { create: jest.fn().mockImplementation((book: Book) => book) },
@@ -30,7 +30,7 @@ describe('CreateBookService', () => {
       ],
     }).compile();
 
-    sut = app.get<CreateBookServiceImpl>(CreateBookServiceImpl);
+    sut = app.get<CreateBookUseCaseImpl>(CreateBookUseCaseImpl);
     bookRepository = app.get<BookRepository>(Tokens.BookRepository);
 
     params = {
@@ -40,6 +40,7 @@ describe('CreateBookService', () => {
       publisher: faker.company.name(),
       year: faker.number.int({ min: 1900, max: 2023 }),
       image: faker.image.url(),
+      user: 'randomUUID',
     };
   });
 
@@ -55,7 +56,7 @@ describe('CreateBookService', () => {
     const got = await sut.create(params);
 
     const expected = {
-      id: 'bc5c8e33-a815-4c77-9268-6363ee95529a',
+      id: 'randomUUID',
       title: params.title,
       author: params.author,
       description: params.description,

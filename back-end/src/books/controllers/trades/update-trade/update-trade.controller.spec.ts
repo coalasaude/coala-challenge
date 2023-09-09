@@ -1,23 +1,24 @@
 import * as Crypto from 'crypto';
 import { faker } from '@faker-js/faker';
-import { NotFoundException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { Tokens } from '@/books/settings/tokens';
-import { NotFoundError } from '@/books/domain/errors';
+import { CannotUpdateTradeError, NotFoundError } from '@/books/domain/errors';
 import { TradeStatus } from '@/books/domain/types';
 import { Trade } from '@/books/domain/entities';
-import { UpdateTradeService } from '@/books/services/trades/update-trade';
+import { UpdateTradeService } from '@/books/use-cases/trades/update-trade';
 
 import * as UpdateTradeDTO from './update-trade.dto';
 import { UpdateTradeController } from './update-trade.controller';
 
 describe('UpdateTradeController', () => {
-  let updateTradeController: UpdateTradeController;
-  let updateTradeService: UpdateTradeService;
+  let controller: UpdateTradeController;
+  let service: UpdateTradeService;
 
   let params: UpdateTradeDTO.Request & { id: string };
   let trade: Trade;
+  let request: { user: { id: string } };
 
   beforeEach(async () => {
     trade = new Trade({
@@ -31,6 +32,7 @@ describe('UpdateTradeController', () => {
         year: faker.number.int({ min: 1900, max: 2023 }),
         description: faker.lorem.paragraph(),
         image: faker.image.url(),
+        user: faker.string.uuid(),
       },
     });
 
@@ -38,7 +40,7 @@ describe('UpdateTradeController', () => {
       controllers: [UpdateTradeController],
       providers: [
         {
-          provide: Tokens.UpdateTradeService,
+          provide: Tokens.UpdateTradeUseCase,
           useValue: {
             update: jest.fn().mockResolvedValue(trade),
           },
@@ -46,41 +48,49 @@ describe('UpdateTradeController', () => {
       ],
     }).compile();
 
-    updateTradeController = app.get<UpdateTradeController>(UpdateTradeController);
-    updateTradeService = app.get<UpdateTradeService>(Tokens.UpdateTradeService);
+    controller = app.get<UpdateTradeController>(UpdateTradeController);
+    service = app.get<UpdateTradeService>(Tokens.UpdateTradeUseCase);
 
     params = {
       id: Crypto.randomUUID(),
       status: TradeStatus.ACCEPTED,
     };
+
+    request = { user: { id: faker.string.uuid() } };
   });
 
-  describe('/books/:id/trade', () => {
-    it('should call the TradeBookService with correct params', async () => {
-      await updateTradeController.trade(params.id, { status: params.status });
-      expect(updateTradeService.update).toHaveBeenCalledWith(params);
-    });
+  it('should call the TradeBookService with correct params', async () => {
+    await controller.trade(request, params.id, { status: params.status });
+    expect(service.update).toHaveBeenCalledWith({ ...params, userId: request.user.id });
+  });
 
-    it('should return not found exception', async () => {
-      jest.spyOn(updateTradeService, 'update').mockRejectedValue(new NotFoundError('Trade not found'));
+  it('should return not found exception', async () => {
+    jest.spyOn(service, 'update').mockRejectedValue(new NotFoundError('Trade not found'));
 
-      const expected = new NotFoundException('Trade not found');
+    const expected = new NotFoundException('Trade not found');
 
-      await expect(updateTradeController.trade(params.id, { status: params.status })).rejects.toEqual(expected);
-    });
+    await expect(controller.trade(request, params.id, { status: params.status })).rejects.toEqual(expected);
+  });
 
-    it('should throw an error if the service throws', async () => {
-      jest.spyOn(updateTradeService, 'update').mockRejectedValue(new Error());
+  it('should return bad request exception', async () => {
+    jest.spyOn(service, 'update').mockRejectedValue(new CannotUpdateTradeError());
 
-      await expect(updateTradeController.trade(params.id, { status: params.status })).rejects.toThrow();
-    });
+    const expected = new BadRequestException('Cannot update trade');
 
-    it('should return the trade on created', async () => {
-      const got = await updateTradeController.trade(params.id, { status: params.status });
+    await expect(controller.trade(request, params.id, { status: params.status })).rejects.toEqual(expected);
+  });
 
-      const expected = trade;
+  it('should throw an error if the service throws', async () => {
+    jest.spyOn(service, 'update').mockRejectedValue(new Error());
 
-      expect(got).toEqual(expected);
-    });
+    await expect(controller.trade(request, params.id, { status: params.status })).rejects.toThrow();
+  });
+
+  it('should return the trade on created', async () => {
+    const got = await controller.trade(request, params.id, { status: params.status });
+
+    const expected = trade;
+
+    expect(got).toEqual(expected);
   });
 });

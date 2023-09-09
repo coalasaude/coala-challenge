@@ -2,16 +2,17 @@ import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { Tokens } from '@/books/settings/tokens';
-import { CreateBookService } from '@/books/services/books/create-book';
+import { CreateBookUseCase } from '@/books/use-cases/books/create-book';
 
 import { CreateBookController } from './create-book.controller';
 import * as CreateBookDTO from './create-book.dto';
 
 describe('CreateBookController', () => {
-  let createBookController: CreateBookController;
-  let createBookService: CreateBookService;
+  let controller: CreateBookController;
+  let useCase: CreateBookUseCase;
 
   let params: CreateBookDTO.Request;
+  let request: { user: { id: string } };
 
   beforeEach(async () => {
     params = {
@@ -26,7 +27,7 @@ describe('CreateBookController', () => {
       controllers: [CreateBookController],
       providers: [
         {
-          provide: Tokens.CreateBookService,
+          provide: Tokens.CreateBookUseCase,
           useValue: {
             create: jest.fn().mockResolvedValue({
               id: 'bc5c8e33-a815-4c77-9268-6363ee95529a',
@@ -42,21 +43,21 @@ describe('CreateBookController', () => {
       ],
     }).compile();
 
-    createBookController = app.get<CreateBookController>(CreateBookController);
-    createBookService = app.get<CreateBookService>(Tokens.CreateBookService);
+    controller = app.get<CreateBookController>(CreateBookController);
+    useCase = app.get<CreateBookUseCase>(Tokens.CreateBookUseCase);
+
+    request = { user: { id: faker.string.uuid() } };
   });
 
   describe('/books', () => {
     it('should call the createBookService', async () => {
-      const spy = jest.spyOn(createBookService, 'create');
+      await controller.create(request, params);
 
-      await createBookController.create(params);
-
-      expect(spy).toHaveBeenCalled();
+      expect(useCase.create).toHaveBeenCalledWith({ ...params, user: request.user.id });
     });
 
     it('should return the book on created', async () => {
-      const got = await createBookController.create(params);
+      const got = await controller.create(request, params);
 
       const expected = {
         id: 'bc5c8e33-a815-4c77-9268-6363ee95529a',

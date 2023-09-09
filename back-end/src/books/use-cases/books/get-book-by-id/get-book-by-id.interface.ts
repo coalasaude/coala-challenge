@@ -1,8 +1,8 @@
-export interface GetBookByIdService {
-  getById(params: GetBookByIdService.Params): Promise<GetBookByIdService.Response>;
+export interface GetBookByIdUseCase {
+  getById(params: GetBookByIdUseCase.Params): Promise<GetBookByIdUseCase.Response>;
 }
 
-export namespace GetBookByIdService {
+export namespace GetBookByIdUseCase {
   export type Params = {
     id: string;
   };

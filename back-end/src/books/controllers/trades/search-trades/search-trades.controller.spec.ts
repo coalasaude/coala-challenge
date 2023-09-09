@@ -2,73 +2,77 @@ import { faker } from '@faker-js/faker';
 import { Test, TestingModule } from '@nestjs/testing';
 
 import { Tokens } from '@/books/settings/tokens';
-import { CreateBookService } from '@/books/services/books/create-book';
+import { Trade } from '@/books/domain/entities';
+import { TradeStatus } from '@/books/domain/types';
+import { SearchTradesUseCase } from '@/books/use-cases/trades';
 
-import { CreateBookController } from './search-books.controller';
-import * as CreateBookDTO from './search-trades.dto';
+import * as SearchTradeDTO from './search-trades.dto';
+import { SearchTradesController } from './search-trade.controller';
 
 describe('CreateBookController', () => {
-  let createBookController: CreateBookController;
-  let createBookService: CreateBookService;
+  let controller: SearchTradesController;
+  let useCase: SearchTradesUseCase;
 
-  let params: CreateBookDTO.Request;
+  let params: SearchTradeDTO.SearchParams;
+  let request: { user: { id: string } };
+  let trade: Trade;
 
   beforeEach(async () => {
     params = {
-      title: faker.lorem.words(3),
-      author: faker.person.fullName(),
-      description: faker.lorem.paragraph(),
-      publisher: faker.company.name(),
-      year: faker.number.int({ min: 1900, max: 2023 }),
+      limit: faker.number.int({ min: 1, max: 10 }),
+      page: faker.number.int({ min: 1, max: 10 }),
+      scope: 'requester',
+      status: TradeStatus.PENDING,
     };
 
+    trade = new Trade({
+      message: faker.lorem.sentence(),
+      status: TradeStatus.PENDING,
+      book: {
+        id: faker.string.uuid(),
+        title: faker.lorem.words(),
+        publisher: faker.lorem.words(),
+        author: faker.person.fullName(),
+        year: faker.number.int({ min: 1900, max: 2023 }),
+        description: faker.lorem.paragraph(),
+        image: faker.image.url(),
+        user: faker.string.uuid(),
+      },
+    });
+
     const app: TestingModule = await Test.createTestingModule({
-      controllers: [CreateBookController],
+      controllers: [SearchTradesController],
       providers: [
         {
-          provide: Tokens.CreateBookService,
+          provide: Tokens.SearchTradesUseCase,
           useValue: {
-            create: jest.fn().mockResolvedValue({
-              id: 'bc5c8e33-a815-4c77-9268-6363ee95529a',
-              title: params.title,
-              author: params.author,
-              description: params.description,
-              publisher: params.publisher,
-              year: params.year,
-              image: params.image,
+            search: jest.fn().mockResolvedValue({
+              pagination: { page: 1, limit: 10, total: 3 },
+              trades: [trade, trade, trade],
             }),
           },
         },
       ],
     }).compile();
 
-    createBookController = app.get<CreateBookController>(CreateBookController);
-    createBookService = app.get<CreateBookService>(Tokens.CreateBookService);
+    controller = app.get<SearchTradesController>(SearchTradesController);
+    useCase = app.get<SearchTradesUseCase>(Tokens.SearchTradesUseCase);
+
+    request = { user: { id: faker.string.uuid() } };
   });
 
-  describe('/books', () => {
-    it('should call the createBookService', async () => {
-      const spy = jest.spyOn(createBookService, 'create');
+  it('should call the SearchTradesUseCase.search with correct params', async () => {
+    await controller.create(request, params);
 
-      await createBookController.create(params);
+    expect(useCase.search).toHaveBeenCalledWith({ ...params, userId: request.user.id });
+  });
 
-      expect(spy).toHaveBeenCalled();
-    });
+  it('should return the trades', async () => {
+    const got = await controller.create(request, params);
 
-    it('should return the book on created', async () => {
-      const got = await createBookController.create(params);
-
-      const expected = {
-        id: 'bc5c8e33-a815-4c77-9268-6363ee95529a',
-        title: params.title,
-        author: params.author,
-        description: params.description,
-        publisher: params.publisher,
-        year: params.year,
-        image: params.image,
-      };
-
-      expect(got).toEqual(expected);
+    expect(got).toEqual({
+      pagination: { page: 1, limit: 10, total: 3 },
+      trades: [trade, trade, trade],
     });
   });
 });

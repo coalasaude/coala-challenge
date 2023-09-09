@@ -6,7 +6,7 @@ import { TradeStatus } from '@/books/domain/types';
 import { Book, Trade } from '@/books/domain/entities';
 import { TradeRepository } from '@/books/repositories';
 
-import { UpdateTradeServiceImpl } from './update-trade.service';
+import { UpdateTradeServiceImpl } from './update-trade.usecase';
 import { UpdateTradeService } from './update-trade.interface';
 
 jest.mock('crypto', () => ({
@@ -31,6 +31,7 @@ describe('UpdateTradeService', () => {
       year: faker.number.int({ min: 1900, max: 2023 }),
       description: faker.lorem.paragraph(),
       image: faker.image.url(),
+      user: 'book_owner_id',
     });
 
     trade = new Trade({
@@ -42,6 +43,7 @@ describe('UpdateTradeService', () => {
     params = {
       id: trade.id,
       status: TradeStatus.ACCEPTED,
+      userId: 'book_owner_id',
     };
 
     const app: TestingModule = await Test.createTestingModule({
@@ -64,7 +66,7 @@ describe('UpdateTradeService', () => {
   it('should call the trade repository with trade id', async () => {
     await sut.update(params);
 
-    expect(tradeRepository.findById).toHaveBeenCalledWith(params.id);
+    expect(tradeRepository.findById).toHaveBeenCalledWith({ id: params.id });
   });
 
   it('should return an error if trade is not found', async () => {
@@ -91,6 +93,18 @@ describe('UpdateTradeService', () => {
     await sut.update({ ...params, status: TradeStatus.PENDING });
 
     expect(tradeRepository.update).toHaveBeenCalledWith({ ...trade, _status: TradeStatus.ACCEPTED });
+  });
+
+  it('should return an error if user is not the book owner', async () => {
+    jest.spyOn(tradeRepository, 'findById').mockResolvedValueOnce(
+      new Trade({
+        message: trade.message,
+        book: { ...trade.book, user: 'another_user_id' },
+        status: TradeStatus.ACCEPTED,
+      }),
+    );
+
+    await expect(sut.update(params)).rejects.toThrow('Cannot update trade');
   });
 
   it('should return the trade with correct status', async () => {

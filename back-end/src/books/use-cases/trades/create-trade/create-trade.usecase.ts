@@ -5,16 +5,16 @@ import { NotFoundError, CannotCreateTradeError } from '@/books/domain/errors';
 import { Trade } from '@/books/domain/entities';
 import { BookRepository, TradeRepository } from '@/books/repositories';
 
-import { CreateTradeService } from './create-trade.interface';
+import { CreateTradeUseCase } from './create-trade.interface';
 
 @Injectable()
-export class CreateTradeServiceImpl implements CreateTradeService {
+export class CreateTradeUseCaseImpl implements CreateTradeUseCase {
   constructor(
     @Inject(Tokens.BookRepository) private readonly bookRepository: BookRepository,
     @Inject(Tokens.TradeRepository) private readonly tradeRepository: TradeRepository,
   ) {}
 
-  async create({ userId, bookId, message }: CreateTradeService.Params): Promise<CreateTradeService.Response> {
+  async create({ userId, bookId, message }: CreateTradeUseCase.Params): Promise<CreateTradeUseCase.Response> {
     const book = await this.bookRepository.getById({ id: bookId });
 
     if (!book) throw new NotFoundError('Book not found');
@@ -27,7 +27,7 @@ export class CreateTradeServiceImpl implements CreateTradeService {
     return this.createResponse(trade);
   }
 
-  private createResponse(trade: Trade): CreateTradeService.Response {
+  private createResponse(trade: Trade): CreateTradeUseCase.Response {
     return {
       id: trade.id,
       message: trade.message,

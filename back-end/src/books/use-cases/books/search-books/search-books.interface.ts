@@ -1,8 +1,8 @@
-export interface SearchBooksService {
-  search(params: SearchBooksService.Params): Promise<SearchBooksService.Response>;
+export interface SearchBooksUseCase {
+  search(params: SearchBooksUseCase.Params): Promise<SearchBooksUseCase.Response>;
 }
 
-export namespace SearchBooksService {
+export namespace SearchBooksUseCase {
   export type Params = {
     q: string;
     page: number;

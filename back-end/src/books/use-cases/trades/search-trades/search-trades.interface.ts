@@ -1,10 +1,10 @@
 import { TradeStatus } from '@/books/domain/types';
 
-export interface SearchTradesService {
-  search(params: SearchTradesService.Params): Promise<SearchTradesService.Response>;
+export interface SearchTradesUseCase {
+  search(params: SearchTradesUseCase.Params): Promise<SearchTradesUseCase.Response>;
 }
 
-export namespace SearchTradesService {
+export namespace SearchTradesUseCase {
   export type Params = {
     scope?: 'requester' | 'owner';
     status?: TradeStatus;

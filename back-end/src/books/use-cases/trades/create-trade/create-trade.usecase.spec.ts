@@ -6,8 +6,8 @@ import { BookRepository, TradeRepository } from '@/books/repositories';
 import { Book, Trade } from '@/books/domain/entities';
 import { TradeStatus } from '@/books/domain/types';
 
-import { CreateTradeServiceImpl } from './create-trade.service';
-import { CreateTradeService } from './create-trade.interface';
+import { CreateTradeUseCaseImpl } from './create-trade.usecase';
+import { CreateTradeUseCase } from './create-trade.interface';
 
 jest.mock('crypto', () => ({
   ...jest.requireActual('crypto'),
@@ -15,11 +15,11 @@ jest.mock('crypto', () => ({
 }));
 
 describe('CreateTradeService', () => {
-  let sut: CreateTradeServiceImpl;
+  let sut: CreateTradeUseCaseImpl;
   let bookRepository: BookRepository;
   let tradeRepository: TradeRepository;
 
-  let params: CreateTradeService.Params;
+  let params: CreateTradeUseCase.Params;
   let trade: Trade;
   let book: Book;
 
@@ -32,17 +32,19 @@ describe('CreateTradeService', () => {
       year: faker.number.int({ min: 1900, max: 2023 }),
       description: faker.lorem.paragraph(),
       image: faker.image.url(),
+      user: 'book_owner_id',
     });
 
     trade = new Trade({
       message: faker.lorem.sentence(),
       status: TradeStatus.PENDING,
       book,
+      requester: { id: 'requester_id' },
     });
 
     const app: TestingModule = await Test.createTestingModule({
       providers: [
-        CreateTradeServiceImpl,
+        CreateTradeUseCaseImpl,
         {
           provide: Tokens.BookRepository,
           useValue: { getById: jest.fn().mockResolvedValue(book) },
@@ -54,11 +56,12 @@ describe('CreateTradeService', () => {
       ],
     }).compile();
 
-    sut = app.get<CreateTradeServiceImpl>(CreateTradeServiceImpl);
+    sut = app.get<CreateTradeUseCaseImpl>(CreateTradeUseCaseImpl);
     bookRepository = app.get<BookRepository>(Tokens.BookRepository);
     tradeRepository = app.get<TradeRepository>(Tokens.TradeRepository);
 
     params = {
+      userId: 'requester_id',
       bookId: book.id,
       message: trade.message,
     };
@@ -67,7 +70,7 @@ describe('CreateTradeService', () => {
   it('should call the book repository with a book id', async () => {
     await sut.create(params);
 
-    expect(bookRepository.getById).toHaveBeenCalledWith(params.bookId);
+    expect(bookRepository.getById).toHaveBeenCalledWith({ id: params.bookId });
   });
 
   it('should throw a not found error if the book does not exist', async () => {
@@ -81,10 +84,21 @@ describe('CreateTradeService', () => {
     expect(tradeRepository.create).toHaveBeenCalledWith(trade);
   });
 
+  it('should throw NotFountError if the book does not exist', async () => {
+    jest.spyOn(bookRepository, 'getById').mockResolvedValueOnce(undefined);
+    await expect(sut.create(params)).rejects.toThrowError('Book not found');
+  });
+
+  it('should throw a CannotCreateTradeError if the user is the book owner', async () => {
+    jest.spyOn(bookRepository, 'getById').mockResolvedValueOnce({ ...book, user: params.userId });
+    await expect(sut.create(params)).rejects.toThrowError('Cannot create trade');
+  });
+
   it('should return the trade', async () => {
     const got = await sut.create(params);
 
     const expected = {
+      id: trade.id,
       message: trade.message,
       status: trade.status,
       book: {

@@ -5,14 +5,14 @@ import { Tokens } from '@/books/settings/tokens';
 import { BookRepository } from '@/books/repositories';
 import { Book } from '@/books/domain/entities';
 
-import { GetBookByIdServiceImpl } from './get-book-by-id.service';
-import { GetBookByIdService } from './get-book-by-id.interface';
+import { GetBookByIdUseCaseImpl } from './get-book-by-id.usecase';
+import { GetBookByIdUseCase } from './get-book-by-id.interface';
 
 describe('GetBookByIdService', () => {
-  let sut: GetBookByIdServiceImpl;
+  let sut: GetBookByIdUseCaseImpl;
   let bookRepository: BookRepository;
 
-  let params: GetBookByIdService.Params;
+  let params: GetBookByIdUseCase.Params;
   let book: Book;
 
   beforeEach(async () => {
@@ -27,7 +27,7 @@ describe('GetBookByIdService', () => {
 
     const app: TestingModule = await Test.createTestingModule({
       providers: [
-        GetBookByIdServiceImpl,
+        GetBookByIdUseCaseImpl,
         {
           provide: Tokens.BookRepository,
           useValue: {
@@ -37,16 +37,16 @@ describe('GetBookByIdService', () => {
       ],
     }).compile();
 
-    sut = app.get<GetBookByIdServiceImpl>(GetBookByIdServiceImpl);
+    sut = app.get<GetBookByIdUseCaseImpl>(GetBookByIdUseCaseImpl);
     bookRepository = app.get<BookRepository>(Tokens.BookRepository);
 
-    params = { id: 'bc5c8e33-a815-4c77-9268-6363ee95529a' };
+    params = { id: faker.string.uuid() };
   });
 
   it('should call the repository with a book id', async () => {
     await sut.getById(params);
 
-    expect(bookRepository.getById).toHaveBeenCalledWith(params.id);
+    expect(bookRepository.getById).toHaveBeenCalledWith({ id: params.id });
   });
 
   it('should throw a not found error if the book does not exist', async () => {

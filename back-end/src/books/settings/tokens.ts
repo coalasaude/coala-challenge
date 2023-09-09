@@ -2,11 +2,11 @@ export class Tokens {
   static readonly BookRepository = Symbol.for('BookRepository');
   static readonly TradeRepository = Symbol.for('TradeRepository');
 
-  static readonly CreateTradeService = Symbol.for('CreateTradeService');
-  static readonly UpdateTradeService = Symbol.for('UpdateTradeService');
-  static readonly SearchTradesService = Symbol.for('SearchTradesService');
+  static readonly CreateTradeUseCase = Symbol.for('CreateTradeUseCase');
+  static readonly UpdateTradeUseCase = Symbol.for('UpdateTradeUseCase');
+  static readonly SearchTradesUseCase = Symbol.for('SearchTradesUseCase');
 
-  static readonly CreateBookService = Symbol.for('CreateBookService');
-  static readonly GetBookByIdService = Symbol.for('GetBookByIdService');
-  static readonly SearchBooksService = Symbol.for('SearchBooksService');
+  static readonly CreateBookUseCase = Symbol.for('CreateBookUseCase');
+  static readonly GetBookByIdUseCase = Symbol.for('GetBookByIdUseCase');
+  static readonly SearchBooksUseCase = Symbol.for('SearchBooksUseCase');
 }

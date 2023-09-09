@@ -6,13 +6,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { Tokens } from '@/books/settings/tokens';
 import { NotFoundError } from '@/books/domain/errors';
 import { Book } from '@/books/domain/entities';
-import { GetBookByIdService } from '@/books/services/books/get-book-by-id';
+import { GetBookByIdUseCase } from '@/books/use-cases/books/get-book-by-id';
 
 import { GetBookByIdController } from './get-book-by-id.controller';
 
 describe('CreateBookController', () => {
   let getBookByIdController: GetBookByIdController;
-  let getBookByIdService: GetBookByIdService;
+  let getBookByIdService: GetBookByIdUseCase;
 
   let params: string;
   let book: Book;
@@ -31,14 +31,14 @@ describe('CreateBookController', () => {
       controllers: [GetBookByIdController],
       providers: [
         {
-          provide: Tokens.GetBookByIdService,
+          provide: Tokens.GetBookByIdUseCase,
           useValue: { getById: jest.fn().mockResolvedValue(book) },
         },
       ],
     }).compile();
 
     getBookByIdController = app.get<GetBookByIdController>(GetBookByIdController);
-    getBookByIdService = app.get<GetBookByIdService>(Tokens.GetBookByIdService);
+    getBookByIdService = app.get<GetBookByIdUseCase>(Tokens.GetBookByIdUseCase);
 
     params = Crypto.randomUUID();
   });
