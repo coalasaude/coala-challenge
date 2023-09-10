@@ -4,13 +4,15 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
 import { UsersModule } from '@/users/users.module';
-
 import { jwtConstants } from '@/auth/settings/constants';
-import { AuthService } from '@/auth/services';
 import { JwtAuthGuard } from '@/auth/guards';
 import { AuthController } from '@/auth/controllers';
 import { LocalStrategy, JwtStrategy } from '@/auth/strategies';
 import { CommonModule } from '@/common/common.module';
+
+import { Tokens } from './settings/tokens';
+import { NestJWTHandler } from './infrastructure/jwt-handler';
+import { LoginUseCaseImpl, ValidateUserUseCaseImpl } from './use-cases';
 
 @Module({
   imports: [
@@ -24,14 +26,25 @@ import { CommonModule } from '@/common/common.module';
   ],
   controllers: [AuthController],
   providers: [
-    AuthService,
     LocalStrategy,
     JwtStrategy,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    {
+      provide: Tokens.JWTHandler,
+      useClass: NestJWTHandler,
+    },
+    {
+      provide: Tokens.LoginUseCase,
+      useClass: LoginUseCaseImpl,
+    },
+    {
+      provide: Tokens.ValidateUserUseCase,
+      useClass: ValidateUserUseCaseImpl,
+    },
   ],
-  exports: [AuthService],
+  exports: [],
 })
 export class AuthModule {}

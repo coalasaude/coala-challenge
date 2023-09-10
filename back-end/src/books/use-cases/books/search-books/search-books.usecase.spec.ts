@@ -5,7 +5,7 @@ import { Tokens } from '@/books/settings/tokens';
 import { BookRepository } from '@/books/repositories';
 import { Book } from '@/books/domain/entities';
 
-import { SearchBooksUseCaseImpl } from './search-books.service';
+import { SearchBooksUseCaseImpl } from './search-books.usecase';
 import { SearchBooksUseCase } from './search-books.interface';
 
 describe('GetBookByIdService', () => {
@@ -54,6 +54,12 @@ describe('GetBookByIdService', () => {
     await sut.search(params);
 
     expect(bookRepository.search).toHaveBeenCalledWith(params);
+  });
+
+  it('should call BookRepository.search with default params', async () => {
+    await sut.search({} as any);
+
+    expect(bookRepository.search).toHaveBeenCalledWith({ page: 1, limit: 10 });
   });
 
   it('should return the books', async () => {

@@ -5,7 +5,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 
 import { Tokens } from '@/books/settings/tokens';
 import { Trade } from '@/books/domain/entities';
-import { NotFoundError } from '@/books/domain/errors';
+import { CannotCreateTradeError, NotFoundError } from '@/books/domain/errors';
 import { TradeStatus } from '@/books/domain/types';
 import { CreateTradeUseCase } from '@/books/use-cases/trades/create-trade';
 
@@ -66,6 +66,14 @@ describe('CreateTradeController', () => {
       jest.spyOn(useCase, 'create').mockRejectedValue(new NotFoundError('Book not found'));
 
       const expected = new NotFoundException('Book not found');
+
+      await expect(controller.create(request, params.bookId, { message: params.message })).rejects.toEqual(expected);
+    });
+
+    it('should return bad request exception', async () => {
+      jest.spyOn(useCase, 'create').mockRejectedValue(new CannotCreateTradeError());
+
+      const expected = new Error('Cannot create trade');
 
       await expect(controller.create(request, params.bookId, { message: params.message })).rejects.toEqual(expected);
     });

@@ -73,6 +73,12 @@ describe('CreateTradeService', () => {
     expect(tradeRepository.search).toHaveBeenCalledWith(params);
   });
 
+  it('should call TradeRepository.search with default params', async () => {
+    await sut.search({} as any);
+
+    expect(tradeRepository.search).toHaveBeenCalledWith({ page: 1, limit: 10 });
+  });
+
   it('should return the trades', async () => {
     const got = await sut.search(params);
 

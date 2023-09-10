@@ -1,12 +1,14 @@
-import { Controller, Get, Request, Post, UseGuards } from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, Inject } from '@nestjs/common';
 
-import { AuthService } from '@/auth/services';
+import { LoginUseCase } from '@/auth/use-cases';
 import { LocalAuthGuard } from '@/auth/guards';
 import { Public } from '@/auth/decorators';
 
+import { Tokens } from '../settings/tokens';
+
 @Controller('/auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(@Inject(Tokens.LoginUseCase) private readonly authService: LoginUseCase) {}
 
   @Public()
   @UseGuards(LocalAuthGuard)
