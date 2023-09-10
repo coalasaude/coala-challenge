@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { Box, Container, Input, Button, TextField, Typography } from '@mui/material';
 
 import { createBook } from '@/services/books/create-book';
+import { uploadBookCover } from '@/services/books/upload-book-cover';
 
 type BookForm = Partial<{
   title: string;
@@ -14,7 +15,6 @@ type BookForm = Partial<{
   year: string;
   author: string;
   description: string;
-  image?: string;
 }>;
 
 export default function Book() {
@@ -26,11 +26,16 @@ export default function Book() {
     description: '',
   });
 
+  const [image, setImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>('');
+
   const router = useRouter();
 
   const onChangePicture = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target?.files?.[0]) return;
-    setBook({ ...book, image: URL.createObjectURL(event.target.files[0]) });
+
+    setImage(event.target.files[0]);
+    setImagePreview(URL.createObjectURL(event.target.files[0]));
   };
 
   const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,8 +55,11 @@ export default function Book() {
       year: Number(book.year),
       author: book.author,
       description: book.description,
-      image: book.image,
     });
+
+    if (image) {
+      await uploadBookCover({ id: data.id, image });
+    }
 
     router.push(`/books/${data.id}`);
   };
@@ -63,7 +71,7 @@ export default function Book() {
           <Box mt={5} display="flex" flexDirection="row" justifyContent="center" gap={5}>
             <Box>
               <Typography variant="body1" component="label" htmlFor="book-cover" sx={{ cursor: 'pointer' }}>
-                {book.image ? (
+                {imagePreview ? (
                   <Box
                     width={200}
                     height={300}
@@ -73,7 +81,7 @@ export default function Book() {
                     justifyContent="center"
                     alignItems="center"
                   >
-                    <Image src={book.image} width={200} height={300} alt="Capa do livro" />
+                    <Image src={imagePreview} width={200} height={300} alt="Capa do livro" />
                   </Box>
                 ) : (
                   <Box p={2} sx={{ backgroundColor: '#FFFFFF', border: '1px solid #ccc', borderRadius: '4px' }}>
@@ -94,7 +102,13 @@ export default function Book() {
                 )}
               </Typography>
 
-              <Input type="file" id="book-cover" sx={{ display: 'none' }} onChange={onChangePicture} />
+              <Input
+                type="file"
+                id="book-cover"
+                sx={{ display: 'none' }}
+                inputProps={{ accept: 'image/*' }}
+                onChange={onChangePicture}
+              />
             </Box>
 
             <Box width="50%">

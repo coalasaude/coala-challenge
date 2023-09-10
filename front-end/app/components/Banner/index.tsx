@@ -19,6 +19,7 @@ export default function Banner({ book, height, width }: Props) {
   return (
     <Link href={`/books/${book.id}`} style={{ textDecoration: 'none', color: '#666' }}>
       <Box
+        position="relative"
         width={width || 200}
         minWidth={width || 200}
         height={height || 300}

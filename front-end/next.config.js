@@ -7,6 +7,15 @@ const nextConfig = {
       transform: '@mui/icons-material/{{member}}',
     },
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'coala.s3.amazonaws.com',
+        port: '',
+      },
+    ],
+  },
 };
 
 module.exports = nextConfig;
