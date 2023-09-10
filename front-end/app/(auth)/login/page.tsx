@@ -3,9 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-import { Alert, Box, Container, FormControl, Button, TextField, Typography } from '@mui/material';
+import { Alert, Box, Container, FormControl, TextField, Typography } from '@mui/material';
 
 import Back from '@/components/Back';
+import WButton from '@/components/WButton';
+
 import { useAuth } from '@/contexts/auth-context';
 
 export default function Login() {
@@ -92,20 +94,12 @@ export default function Login() {
               />
             </FormControl>
 
-            <Button
-              disableElevation
-              variant="contained"
-              type="submit"
-              sx={{ mt: 1, width: '100%' }}
-              disabled={isLoading}
-            >
+            <WButton type="submit" disabled={isLoading}>
               {isLoading ? 'Carregando...' : 'Entrar'}
-            </Button>
+            </WButton>
 
             <Link href="/signup">
-              <Button variant="text" sx={{ mt: 1, width: '100%' }}>
-                Cadastrar
-              </Button>
+              <WButton variant="text">Cadastrar</WButton>
             </Link>
           </Box>
         </form>

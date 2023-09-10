@@ -1,13 +1,14 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
-import { Box, Container, Input, Button, TextField, Typography } from '@mui/material';
+import { Box, Container, Input, TextField, Typography } from '@mui/material';
 
 import { createBook } from '@/services/books/create-book';
 import { uploadBookCover } from '@/services/books/upload-book-cover';
+import WButton from '@/components/WButton';
 
 type BookForm = Partial<{
   title: string;
@@ -170,9 +171,7 @@ export default function Book() {
               </Box>
 
               <Box width="100%" display="flex" justifyContent="flex-end" mt={5}>
-                <Button variant="contained" type="submit" disableElevation>
-                  Adicionar livro
-                </Button>
+                <WButton type="submit">Adicionar livro</WButton>
               </Box>
             </Box>
           </Box>

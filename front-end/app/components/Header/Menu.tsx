@@ -1,8 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, Link, MenuItem, Menu as MuiMenu } from '@mui/material';
+import { Link, MenuItem, Menu as MuiMenu } from '@mui/material';
 import { logout, useAuth } from '@/contexts/auth-context';
+
+import WButton from '../WButton';
 
 export default function Menu() {
   const auth = useAuth();
@@ -23,7 +25,9 @@ export default function Menu() {
 
   return (
     <>
-      <Button onClick={handleClick}>{auth.user?.name}</Button>
+      <WButton variant="text" onClick={handleClick}>
+        {auth.user?.name}
+      </WButton>
       <MuiMenu id="basic-menu" anchorEl={anchorEl} open={open} onClose={handleClose}>
         <MenuItem>
           <Link href="/books/create" style={{ textDecoration: 'none', color: '#333' }}>

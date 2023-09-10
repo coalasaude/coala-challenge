@@ -1,10 +1,12 @@
 'use client';
 
-import { Box, Button, Container, Link, Typography } from '@mui/material';
+import { Box, Container, Link, Stack, Typography } from '@mui/material';
 
 import InputSearch from '@/components/InputSearch';
 import Menu from '@/components/Header/Menu';
-import { useAuth } from './contexts/auth-context';
+import WButton from '@/components/WButton';
+
+import { useAuth } from '../contexts/auth-context';
 
 export default function Home() {
   const auth = useAuth();
@@ -18,18 +20,14 @@ export default function Home() {
               {auth.isAuthenticated ? (
                 <Menu />
               ) : (
-                <>
+                <Stack direction="row" gap={2}>
                   <Link href="/login">
-                    <Button variant="outlined" disableElevation sx={{ mr: 2 }}>
-                      Entrar
-                    </Button>
+                    <WButton variant="outlined">Entrar</WButton>
                   </Link>
                   <Link href="/signup">
-                    <Button variant="contained" disableElevation>
-                      Cadastrar
-                    </Button>
+                    <WButton>Cadastrar</WButton>
                   </Link>
-                </>
+                </Stack>
               )}
             </Box>
           </Box>

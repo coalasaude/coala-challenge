@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from 'react';
 
-import { Alert, Box, Button, Modal, TextField, Typography } from '@mui/material';
+import { Alert, Box, Modal, Stack, TextField, Typography } from '@mui/material';
 
 import { createTrade } from '@/services/trades/create-trade';
 import { useAuth } from '@/contexts/auth-context';
 import { useRouter } from 'next/navigation';
+import WButton from '@/components/WButton';
 
 type Props = {
   bookId: string;
@@ -47,9 +48,7 @@ export default function TradeModal({ bookId }: Props) {
 
   return (
     <>
-      <Button variant="contained" disableElevation sx={{ mt: 3 }} onClick={handleOpen}>
-        Iniciar troca
-      </Button>
+      <WButton onClick={handleOpen}>Iniciar troca</WButton>
 
       <div>
         <Modal
@@ -98,15 +97,15 @@ export default function TradeModal({ bookId }: Props) {
                   required
                 />
 
-                <Box mt={2}>
-                  <Button variant="outlined" color="error" disableElevation sx={{ mt: 3 }} onClick={handleClose}>
+                <Stack direction="row" gap={2} mt={2} justifyContent="flex-end">
+                  <WButton variant="outlined" color="error" onClick={handleClose}>
                     Cancelar
-                  </Button>
+                  </WButton>
 
-                  <Button type="submit" variant="contained" disableElevation sx={{ mt: 3, ml: 2 }} disabled={isLoading}>
+                  <WButton type="submit" disabled={isLoading}>
                     {isLoading ? 'Enviando...' : 'Enviar'}
-                  </Button>
-                </Box>
+                  </WButton>
+                </Stack>
               </form>
             </Box>
           </Box>

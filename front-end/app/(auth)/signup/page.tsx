@@ -1,13 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-import { Alert, Box, Container, FormControl, Button, TextField, Typography } from '@mui/material';
+import { Alert, Box, Container, FormControl, TextField, Typography } from '@mui/material';
 
 import Back from '@/components/Back';
-import { useRouter } from 'next/navigation';
-import { signup } from '@/services/auth/singup';
 import { useAuth } from '@/contexts/auth-context';
+import WButton from '@/components/WButton';
+import Link from 'next/link';
 
 export default function Login() {
   const auth = useAuth();
@@ -106,19 +107,13 @@ export default function Login() {
               />
             </FormControl>
 
-            <Button
-              disableElevation
-              variant="contained"
-              type="submit"
-              sx={{ mt: 1, width: '100%' }}
-              disabled={isLoading}
-            >
+            <WButton type="submit" disabled={isLoading}>
               {isLoading ? 'Carregando...' : 'Cadastrar'}
-            </Button>
+            </WButton>
 
-            <Button variant="text" sx={{ mt: 1, width: '100%' }} onClick={() => router.push('/login')}>
-              Login
-            </Button>
+            <Link href="/login">
+              <WButton variant="text">Login</WButton>
+            </Link>
           </Box>
         </form>
       </Box>
