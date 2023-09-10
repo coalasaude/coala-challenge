@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SearchTradesUseCase } from './search-trades.interface';
 import { Tokens } from '@/books/settings/tokens';
-import { TradeRepository } from '@/books/repositories';
+import { TradeRepository } from '@/books/infrastructure/repositories';
 
 @Injectable()
 export class SearchTradesUseCaseImpl implements SearchTradesUseCase {

@@ -2,15 +2,27 @@ import { Module } from '@nestjs/common';
 
 import { Tokens } from '@/books/settings/tokens';
 
-import { CreateBookController, GetBookByIdController, SearchBooksController } from '@/books/controllers/books';
+import {
+  CreateBookController,
+  GetBookByIdController,
+  SearchBooksController,
+  UploadBookCoverController,
+} from '@/books/controllers/books';
 import { CreateTradeController, SearchTradesController, UpdateTradeController } from '@/books/controllers/trades';
 
-import { CreateBookUseCaseImpl, GetBookByIdUseCaseImpl, SearchBooksUseCaseImpl } from '@/books/use-cases/books';
+import {
+  CreateBookUseCaseImpl,
+  GetBookByIdUseCaseImpl,
+  SearchBooksUseCaseImpl,
+  UploadBookCoverUseCaseImpl,
+} from '@/books/use-cases/books';
+
 import { CreateTradeUseCaseImpl, SearchTradesUseCaseImpl, UpdateTradeServiceImpl } from '@/books/use-cases/trades';
 
-import { PrismaBookRepository, PrismaTradeRepository } from '@/books/repositories';
+import { PrismaBookRepository, PrismaTradeRepository } from '@/books/infrastructure/repositories';
 
 import { CommonModule } from '@/common/common.module';
+import { S3Storage } from './infrastructure/storage';
 
 @Module({
   imports: [CommonModule],
@@ -21,6 +33,7 @@ import { CommonModule } from '@/common/common.module';
     UpdateTradeController,
     SearchBooksController,
     SearchTradesController,
+    UploadBookCoverController,
   ],
   providers: [
     { provide: Tokens.CreateBookUseCase, useClass: CreateBookUseCaseImpl },
@@ -29,8 +42,10 @@ import { CommonModule } from '@/common/common.module';
     { provide: Tokens.UpdateTradeUseCase, useClass: UpdateTradeServiceImpl },
     { provide: Tokens.SearchBooksUseCase, useClass: SearchBooksUseCaseImpl },
     { provide: Tokens.SearchTradesUseCase, useClass: SearchTradesUseCaseImpl },
+    { provide: Tokens.UploadBookCoverUseCase, useClass: UploadBookCoverUseCaseImpl },
     { provide: Tokens.BookRepository, useClass: PrismaBookRepository },
     { provide: Tokens.TradeRepository, useClass: PrismaTradeRepository },
+    { provide: Tokens.Storage, useClass: S3Storage },
   ],
 })
 export class BooksModule {}

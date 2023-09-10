@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { Tokens } from '@/books/settings/tokens';
 import { NotFoundError } from '@/books/domain/errors';
-import { BookRepository } from '@/books/repositories';
+import { BookRepository } from '@/books/infrastructure/repositories';
 
 import { GetBookByIdUseCase } from './get-book-by-id.interface';
 

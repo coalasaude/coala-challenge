@@ -3,6 +3,7 @@ import { Book } from '@/books/domain/entities';
 export interface BookRepository {
   search(params: SearchParams): Promise<SearchResponse>;
   create(book: Book): Promise<Book>;
+  update(book: Book): Promise<Book>;
   getById(params: GetByIdParams): Promise<Book | undefined>;
 }
 

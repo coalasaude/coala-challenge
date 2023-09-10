@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SearchBooksUseCase } from './search-books.interface';
 import { Tokens } from '@/books/settings/tokens';
-import { BookRepository } from '@/books/repositories';
+import { BookRepository } from '@/books/infrastructure/repositories';
 
 @Injectable()
 export class SearchBooksUseCaseImpl implements SearchBooksUseCase {

@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { Tokens } from '@/books/settings/tokens';
 import { Book } from '@/books/domain/entities';
-import { BookRepository } from '@/books/repositories';
+import { BookRepository } from '@/books/infrastructure/repositories';
 
 import { CreateBookUseCase } from './create-book.interface';
 

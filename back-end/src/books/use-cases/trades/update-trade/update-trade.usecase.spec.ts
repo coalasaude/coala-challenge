@@ -4,7 +4,7 @@ import { faker } from '@faker-js/faker';
 import { Tokens } from '@/books/settings/tokens';
 import { TradeStatus } from '@/books/domain/types';
 import { Book, Trade } from '@/books/domain/entities';
-import { TradeRepository } from '@/books/repositories';
+import { TradeRepository } from '@/books/infrastructure/repositories';
 
 import { UpdateTradeServiceImpl } from './update-trade.usecase';
 import { UpdateTradeService } from './update-trade.interface';

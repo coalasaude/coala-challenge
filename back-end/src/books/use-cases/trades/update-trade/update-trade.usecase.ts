@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Tokens } from '@/books/settings/tokens';
 import { Trade } from '@/books/domain/entities';
 import { CannotUpdateTradeError, NotFoundError } from '@/books/domain/errors';
-import { TradeRepository } from '@/books/repositories';
+import { TradeRepository } from '@/books/infrastructure/repositories';
 
 import { UpdateTradeService } from './update-trade.interface';
 

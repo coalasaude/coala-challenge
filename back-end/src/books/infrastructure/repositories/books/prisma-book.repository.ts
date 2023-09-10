@@ -8,6 +8,20 @@ import { BookRepository, GetByIdParams, SearchParams, SearchResponse } from './b
 @Injectable()
 export class PrismaBookRepository implements BookRepository {
   constructor(private readonly prismaService: PrismaService) {}
+  async update(book: Book): Promise<Book> {
+    const updated = await this.prismaService.books.update({
+      where: { id: book.id },
+      data: {
+        title: book.title,
+        description: book.description,
+        author: book.author,
+        image: book.image,
+        year: book.year,
+      },
+    });
+
+    return new Book({ ...updated, user: book.user });
+  }
 
   async search(params: SearchParams): Promise<SearchResponse> {
     const { q, page, limit } = params;

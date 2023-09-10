@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { faker } from '@faker-js/faker';
 
 import { Tokens } from '@/books/settings/tokens';
-import { BookRepository } from '@/books/repositories';
+import { BookRepository } from '@/books/infrastructure/repositories';
 import { Book } from '@/books/domain/entities';
 
 import { CreateBookUseCaseImpl } from './create-book.usecase';

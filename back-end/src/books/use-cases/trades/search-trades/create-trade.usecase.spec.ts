@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { faker } from '@faker-js/faker';
 
 import { Tokens } from '@/books/settings/tokens';
-import { TradeRepository } from '@/books/repositories';
+import { TradeRepository } from '@/books/infrastructure/repositories';
 import { Book, Trade } from '@/books/domain/entities';
 import { TradeStatus } from '@/books/domain/types';
 import { SearchTradesUseCaseImpl } from './search-trades.usecase';
