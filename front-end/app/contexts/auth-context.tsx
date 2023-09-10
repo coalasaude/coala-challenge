@@ -1,6 +1,7 @@
 'use client';
 import { api } from '@/core/services/api';
 import { getUser } from '@/core/services/auth/get-user';
+import { User } from '@/core/types';
 import { useRouter } from 'next/navigation';
 import { setCookie, destroyCookie, parseCookies } from 'nookies';
 import { createContext, useContext, useEffect, useState } from 'react';
@@ -18,12 +19,6 @@ type SignupParams = {
 
 type LoginResponse = {
   error: string;
-};
-
-type User = {
-  id: string;
-  name: string;
-  username: string;
 };
 
 const AuthContext = createContext({
@@ -48,11 +43,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | undefined>();
 
   useEffect(() => {
-    const loadUser = async () => {
-      const user = await getUser();
-      if (user) setUser(user);
-    };
-
     loadUser();
 
     authChannel = new BroadcastChannel('auth');
@@ -90,10 +80,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       api.defaults.headers.Authorization = `Bearer ${data.access_token}`;
 
+      await loadUser();
       router.push('/');
     } catch (error) {
       return { error: 'Usuário ou senha inválidos' };
     }
+  };
+
+  const loadUser = async () => {
+    const user = await getUser();
+    if (user) setUser(user);
   };
 
   return (
