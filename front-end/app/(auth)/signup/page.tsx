@@ -1,14 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
-import { Alert, Box, Container, FormControl, TextField, Typography } from '@mui/material';
+import { Alert, Box, Container, Typography } from '@mui/material';
 
-import Back from '@/components/Back';
+import WBack from '@/components/WBack';
 import { useAuth } from '@/contexts/auth-context';
 import WButton from '@/components/WButton';
-import Link from 'next/link';
+import WInput from '@/components/WInput';
+
+import WAuthForm from '../components/WAuthForm';
+import * as styles from './styles';
 
 export default function Login() {
   const auth = useAuth();
@@ -19,8 +22,6 @@ export default function Login() {
 
   const [error, setError] = useState<string | undefined>('');
   const [isLoading, setIsLoading] = useState(false);
-
-  const router = useRouter();
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -37,86 +38,41 @@ export default function Login() {
   }
 
   return (
-    <Container>
-      <Box
-        position="relative"
-        display="flex"
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
-        <Box mt={3} position="absolute" top={0} left={0}>
-          <Back />
-        </Box>
-
-        <Typography variant="h5" sx={{ mb: 4 }}>
-          Cadastro
-        </Typography>
-
-        <form onSubmit={handleSubmit}>
-          <Box
-            width="100%"
-            display="flex"
-            flexDirection="column"
-            gap={2}
-            border="1px solid #ccc"
-            borderRadius={1}
-            p={4}
-            sx={{ bgcolor: '#fff' }}
-          >
-            {error && (
-              <Alert severity="error" sx={{ mb: 1 }}>
-                Usuário ou senha incorretos
-              </Alert>
-            )}
-
-            <FormControl>
-              <TextField
-                type="text"
-                label="Nome"
-                fullWidth
-                size="small"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                required
-              />
-            </FormControl>
-
-            <FormControl>
-              <TextField
-                type="text"
-                label="Usuário"
-                fullWidth
-                size="small"
-                value={username}
-                onChange={(event) => setUsername(event.target.value)}
-                required
-              />
-            </FormControl>
-
-            <FormControl>
-              <TextField
-                type="password"
-                label="Senha"
-                fullWidth
-                size="small"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-                required
-              />
-            </FormControl>
-
-            <WButton type="submit" disabled={isLoading}>
-              {isLoading ? 'Carregando...' : 'Cadastrar'}
-            </WButton>
-
-            <Link href="/login">
-              <WButton variant="text">Login</WButton>
-            </Link>
-          </Box>
-        </form>
+    <Container sx={styles.container}>
+      <Box sx={styles.back}>
+        <WBack />
       </Box>
+
+      <Typography variant="h5" sx={{ mb: 4 }}>
+        Cadastro
+      </Typography>
+
+      <WAuthForm onSubmit={handleSubmit}>
+        {error && (
+          <Alert severity="error" sx={{ mb: 1 }}>
+            Usuário ou senha incorretos
+          </Alert>
+        )}
+
+        <WInput label="Nome" value={name} onChange={(event) => setName(event.target.value)} required />
+        <WInput label="E-mail" value={username} onChange={(event) => setUsername(event.target.value)} required />
+
+        <WInput
+          type="password"
+          label="Senha"
+          value={password}
+          onChange={(event) => setPassword(event.target.value)}
+          required
+        />
+
+        <WButton type="submit" disabled={isLoading}>
+          {isLoading ? 'Carregando...' : 'Cadastrar'}
+        </WButton>
+
+        <Link href="/login">
+          <WButton variant="text">Login</WButton>
+        </Link>
+      </WAuthForm>
     </Container>
   );
 }

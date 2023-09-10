@@ -1,6 +1,6 @@
 'use client';
-import { api } from '@/services/api';
-import { getUser } from '@/services/auth/get-user';
+import { api } from '@/core/services/api';
+import { getUser } from '@/core/services/auth/get-user';
 import { useRouter } from 'next/navigation';
 import { setCookie, destroyCookie, parseCookies } from 'nookies';
 import { createContext, useContext, useEffect, useState } from 'react';

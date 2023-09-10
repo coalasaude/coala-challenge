@@ -1,20 +1,15 @@
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 
-import Banner from '@/components/Banner';
+import WBanner from '@/components/WBanner';
+import WLink from '@/components/WLink';
+import WButton from '@/components/WButton';
+import { Trade } from '@/core/types';
+
+import * as styles from './styles';
 
 type TradeCardProps = {
-  trade: {
-    id: string;
-    status: string;
-    message: string;
-    book: {
-      id: string;
-      title: string;
-    };
-  };
-
+  trade: Trade;
   hasActions?: boolean;
-
   onAccept?: () => void;
   onRefuse?: () => void;
 };
@@ -27,36 +22,38 @@ export default function TradeCard({ trade, hasActions, onAccept, onRefuse }: Tra
   };
 
   return (
-    <Box display="flex" maxWidth={400} borderRadius={1} sx={{ p: 2, background: '#E9F3F8' }}>
-      <Banner book={trade.book} width={100} height={150} />
+    <Stack direction="row" sx={styles.container}>
+      <WLink href={`/books/${trade.book.id}`}>
+        <WBanner placeholder={trade.book.title} image={trade.book.image} width={100} height={150} />
+      </WLink>
 
-      <Box ml={2}>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
+      <Stack sx={styles.content}>
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
           <Typography variant="body1" component="p">
             <strong>{mappingStatus[trade.status]}</strong>
           </Typography>
 
           {hasActions && trade.status === 'PENDING' && (
             <Box>
-              <Button variant="text" color="error" size="small" onClick={onRefuse}>
+              <WButton variant="text" color="error" onClick={onRefuse}>
                 Recusar
-              </Button>
+              </WButton>
 
-              <Button variant="text" color="primary" size="small" onClick={onAccept}>
+              <WButton variant="text" onClick={onAccept}>
                 Aceitar
-              </Button>
+              </WButton>
             </Box>
           )}
-        </Box>
+        </Stack>
 
-        <Typography variant="body2" component="p" sx={{ mt: 2 }}>
+        <Typography variant="body2" component="p" sx={styles.messageLabel}>
           <strong>Mensagem</strong>
         </Typography>
 
-        <Typography variant="body2" component="p" sx={{ mt: 1, textOverflow: 'ellipsis', overflow: 'hidden' }}>
+        <Typography variant="body2" component="p" sx={styles.message}>
           {trade.message}
         </Typography>
-      </Box>
-    </Box>
+      </Stack>
+    </Stack>
   );
 }

@@ -1,10 +1,10 @@
-import Image from 'next/image';
+import { Container, Stack, Typography } from '@mui/material';
 
-import { Box, Container, Typography } from '@mui/material';
-
-import { getBook } from '@/services/books/get-book-by-id';
+import { getBook } from '@/core/services/books/get-book-by-id';
 import TradeModal from './components/TradeModal';
-import Banner from '@/components/Banner';
+import WBanner from '@/components/WBanner';
+
+import * as styles from './styles';
 
 type Props = {
   params: { bookId: string };
@@ -20,24 +20,21 @@ export default async function Book({ params }: Props) {
   const book = await getBook(bookId);
 
   return (
-    <Container sx={{ pb: 10 }}>
-      <Box mt={5} display="flex">
-        <Banner book={book} />
+    <Container sx={styles.container}>
+      <Stack gap={2}>
+        <WBanner placeholder={book.title} image={book.image} />
+        <TradeModal bookId={bookId} />
+      </Stack>
 
-        <Box ml={5}>
-          <Typography variant="h3" component="h1">
-            {book.title}
-          </Typography>
+      <Stack sx={styles.content}>
+        <Typography variant="h3" component="h1">
+          {book.title}
+        </Typography>
 
-          <Box mt={2}>
-            <Typography variant="body1" component="p">
-              {book.description}
-            </Typography>
-          </Box>
-
-          <TradeModal bookId={bookId} />
-        </Box>
-      </Box>
+        <Typography variant="body1" component="p" sx={styles.description}>
+          {book.description}
+        </Typography>
+      </Stack>
     </Container>
   );
 }

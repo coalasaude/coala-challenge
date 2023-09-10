@@ -1,13 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
-import { Alert, Box, Modal, Stack, TextField, Typography } from '@mui/material';
-
-import { createTrade } from '@/services/trades/create-trade';
-import { useAuth } from '@/contexts/auth-context';
 import { useRouter } from 'next/navigation';
+
+import { Alert, Stack, TextField, Typography } from '@mui/material';
+
+import { useAuth } from '@/contexts/auth-context';
+import { createTrade } from '@/core/services/trades/create-trade';
+
 import WButton from '@/components/WButton';
+import WModal from '@/components/WModal';
+
+import * as styles from './styles';
 
 type Props = {
   bookId: string;
@@ -16,6 +20,7 @@ type Props = {
 export default function TradeModal({ bookId }: Props) {
   const auth = useAuth();
   const router = useRouter();
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -50,67 +55,46 @@ export default function TradeModal({ bookId }: Props) {
     <>
       <WButton onClick={handleOpen}>Iniciar troca</WButton>
 
-      <div>
-        <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box
-            sx={{
-              position: 'absolute' as 'absolute',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
-              width: 400,
-              bgcolor: 'background.paper',
-              boxShadow: 24,
-              p: 4,
-              borderRadius: 1,
-            }}
-          >
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Iniciar troca
-            </Typography>
-            <Box mt={2}>
-              <Typography id="modal-modal-description" variant="body2" component="p">
-                Escreva uma mensagem para o dono do livro que você deseja trocar.
-              </Typography>
+      <WModal open={open} onClose={handleClose}>
+        <Typography variant="h6" component="h2">
+          Iniciar troca
+        </Typography>
 
-              {error && (
-                <Alert severity="error" sx={{ my: 2 }}>
-                  {error}
-                </Alert>
-              )}
+        <Stack mt={2}>
+          <Typography variant="body2" component="p">
+            Escreva uma mensagem para o dono do livro que você deseja trocar.
+          </Typography>
 
-              <form onSubmit={handleSubmit}>
-                <TextField
-                  label="Mensagem"
-                  size="small"
-                  multiline
-                  minRows={5}
-                  value={message}
-                  onChange={(event) => setMessage(event.target.value)}
-                  sx={{ mt: 2 }}
-                  fullWidth
-                  required
-                />
+          {error && (
+            <Alert severity="error" sx={styles.alert}>
+              {error}
+            </Alert>
+          )}
 
-                <Stack direction="row" gap={2} mt={2} justifyContent="flex-end">
-                  <WButton variant="outlined" color="error" onClick={handleClose}>
-                    Cancelar
-                  </WButton>
+          <form onSubmit={handleSubmit}>
+            <TextField
+              label="Mensagem"
+              size="small"
+              multiline
+              minRows={5}
+              value={message}
+              onChange={(event) => setMessage(event.target.value)}
+              sx={styles.textArea}
+              required
+            />
 
-                  <WButton type="submit" disabled={isLoading}>
-                    {isLoading ? 'Enviando...' : 'Enviar'}
-                  </WButton>
-                </Stack>
-              </form>
-            </Box>
-          </Box>
-        </Modal>
-      </div>
+            <Stack direction="row" sx={styles.buttons}>
+              <WButton variant="outlined" color="error" onClick={handleClose}>
+                Cancelar
+              </WButton>
+
+              <WButton type="submit" disabled={isLoading}>
+                {isLoading ? 'Enviando...' : 'Enviar'}
+              </WButton>
+            </Stack>
+          </form>
+        </Stack>
+      </WModal>
     </>
   );
 }

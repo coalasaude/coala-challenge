@@ -1,9 +1,9 @@
-import Header from '@/components/Header';
+import WHeader from '@/components/WHeader';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <section>
-      <Header />
+      <WHeader />
       {children}
     </section>
   );
