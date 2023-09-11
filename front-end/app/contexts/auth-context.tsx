@@ -29,12 +29,10 @@ const AuthContext = createContext({
   user: {} as User | undefined,
 });
 
-let authChannel: BroadcastChannel;
+let channel: BroadcastChannel;
 
-export const logout = (): undefined => {
-  destroyCookie(null, 'auth.token', { path: '/' });
-  delete api.defaults.headers.Authorization;
-  authChannel.postMessage('logout');
+export const logout = () => {
+  channel.postMessage('logout');
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -45,17 +43,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     loadUser();
 
-    authChannel = new BroadcastChannel('auth');
+    channel = new BroadcastChannel('auth');
 
-    authChannel.onmessage = (message) => {
-      const mapping: Record<string, any> = {
-        logout: () => {
-          setUser(undefined);
-          router.push('/');
-        },
-      };
-
-      mapping[message.data]();
+    channel.onmessage = (message) => {
+      if (message.data === 'logout') logout();
     };
   }, []);
 
@@ -85,6 +76,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       return { error: 'Usuário ou senha inválidos' };
     }
+  };
+
+  const logout = (): undefined => {
+    destroyCookie(null, 'auth.token', { path: '/' });
+    delete api.defaults.headers.Authorization;
+    setUser(undefined);
+    router.push('/');
   };
 
   const loadUser = async () => {

@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { Link, MenuItem, Menu, Stack } from '@mui/material';
-import { logout, useAuth } from '@/contexts/auth-context';
+import { useAuth } from '@/contexts/auth-context';
 
 import WButton from '../WButton';
+import WLink from '../WLink';
 
 export default function WMenu() {
   const auth = useAuth();
@@ -20,7 +21,7 @@ export default function WMenu() {
   };
 
   const handleLogout = () => {
-    logout();
+    auth.logout();
   };
 
   if (!auth.isAuthenticated)
@@ -42,14 +43,10 @@ export default function WMenu() {
         </WButton>
         <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
           <MenuItem>
-            <Link href="/books/create" style={{ textDecoration: 'none', color: '#333' }}>
-              Adicionar Livro
-            </Link>
+            <WLink href="/books/create">Adicionar Livro</WLink>
           </MenuItem>
           <MenuItem>
-            <Link href="/trades" style={{ textDecoration: 'none', color: '#333' }}>
-              Ver trocas
-            </Link>
+            <WLink href="/trades">Ver trocas</WLink>
           </MenuItem>
 
           <MenuItem onClick={handleLogout}>Logout</MenuItem>

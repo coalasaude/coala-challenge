@@ -34,7 +34,7 @@ export default function TradeCard({ trade, hasActions, onAccept, onRefuse }: Tra
           </Typography>
 
           {hasActions && trade.status === 'PENDING' && (
-            <Box>
+            <Stack direction="row">
               <WButton variant="text" color="error" onClick={onRefuse}>
                 Recusar
               </WButton>
@@ -42,7 +42,7 @@ export default function TradeCard({ trade, hasActions, onAccept, onRefuse }: Tra
               <WButton variant="text" onClick={onAccept}>
                 Aceitar
               </WButton>
-            </Box>
+            </Stack>
           )}
         </Stack>
 
