@@ -55,7 +55,7 @@ export default function Login() {
         )}
 
         <WInput label="Nome" value={name} onChange={(event) => setName(event.target.value)} required />
-        <WInput label="E-mail" value={username} onChange={(event) => setUsername(event.target.value)} required />
+        <WInput label="Usuário" value={username} onChange={(event) => setUsername(event.target.value)} required />
 
         <WInput
           type="password"
