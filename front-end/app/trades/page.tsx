@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import useSWR from 'swr';
 
 import { Container, Grid, Stack, Typography } from '@mui/material';
@@ -9,21 +9,25 @@ import fetcher from '@/core/services/fetcher';
 import { Trade } from '@/core/types';
 
 import TradeCard from './components/TradeCard';
+import { updateTrade } from '@/core/services/trades/update-trade';
 
 export default function Trades() {
-  const [ownerTrades, setOwnerTrades] = useState<Trade[]>([]);
-
-  const { data: owner } = useSWR<{ trades: Trade[] }>('/trades?scope=owner', fetcher);
+  const { data: owner, mutate: ownerMutate } = useSWR<{ trades: Trade[] }>('/trades?scope=owner', fetcher);
   const { data: requester } = useSWR<{ trades: Trade[] }>('/trades?scope=requester', fetcher);
 
-  const handleUpdate = (tradeId: string, status: 'REJECTED' | 'ACCEPTED') => {
-    const updatedTrades = ownerTrades.map((trade) => {
-      if (trade.id === tradeId) return { ...trade, status };
-      return trade;
-    });
+  const handleUpdate = useCallback(
+    (tradeId: string, status: 'REJECTED' | 'ACCEPTED') => {
+      updateTrade({ tradeId, status });
 
-    setOwnerTrades(updatedTrades);
-  };
+      const updatedTrades = owner?.trades?.map((trade) => {
+        if (trade.id === tradeId) return { ...trade, status };
+        return trade;
+      });
+
+      ownerMutate(updatedTrades);
+    },
+    [owner, ownerMutate],
+  );
 
   return (
     <Container sx={{ py: 5 }}>
