@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Books {
+  id          String   @id @default(uuid())
+  title       String
+  author      String
+  description String
+  publisher   String
+  year        Int
+  image       String?
+  trade       Trades[]
+  user        Users?   @relation(fields: [usersId], references: [id])
+  usersId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Trades {
+  id        String   @id @default(uuid())
+  message   String
+  status    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Book      Books?   @relation(fields: [bookId], references: [id])
+  bookId    String?
+  Users     Users?   @relation(fields: [usersId], references: [id])
+  usersId   String?
+}
+
+model Users {
+  id        String   @id @default(uuid())
+  name      String
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Books     Books[]
+  Trades    Trades[]
+}
