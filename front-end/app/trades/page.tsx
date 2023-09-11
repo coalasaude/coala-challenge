@@ -1,56 +1,29 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import useSWR from 'swr';
 
 import { Container, Grid, Stack, Typography } from '@mui/material';
 
-import { getTrades } from '@/core/services/trades/get-trades';
-import { updateTrade } from '@/core/services/trades/update-trade';
+import fetcher from '@/core/services/fetcher';
 import { Trade } from '@/core/types';
 
 import TradeCard from './components/TradeCard';
 
 export default function Trades() {
   const [ownerTrades, setOwnerTrades] = useState<Trade[]>([]);
-  const [requesterTrades, setRequesterTrades] = useState<Trade[]>([]);
 
-  const handleAccept = async (tradeId: string) => {
-    const isSuccessful = await updateTrade({ tradeId, status: 'ACCEPTED' });
+  const { data: owner } = useSWR<{ trades: Trade[] }>('/trades?scope=owner', fetcher);
+  const { data: requester } = useSWR<{ trades: Trade[] }>('/trades?scope=requester', fetcher);
 
-    if (isSuccessful) {
-      const updatedTrades = ownerTrades.map((trade) => {
-        if (trade.id === tradeId) return { ...trade, status: 'ACCEPTED' };
-        return trade;
-      });
+  const handleUpdate = (tradeId: string, status: 'REJECTED' | 'ACCEPTED') => {
+    const updatedTrades = ownerTrades.map((trade) => {
+      if (trade.id === tradeId) return { ...trade, status };
+      return trade;
+    });
 
-      setOwnerTrades(updatedTrades);
-    }
+    setOwnerTrades(updatedTrades);
   };
-
-  const handleRefuse = async (tradeId: string) => {
-    const isSuccessful = await updateTrade({ tradeId, status: 'REJECTED' });
-
-    if (isSuccessful) {
-      const updatedTrades = ownerTrades.map((trade) => {
-        if (trade.id === tradeId) return { ...trade, status: 'REJECTED' };
-        return trade;
-      });
-
-      setOwnerTrades(updatedTrades);
-    }
-  };
-
-  useEffect(() => {
-    const fetchTrades = async () => {
-      const owner = await getTrades('owner');
-      setOwnerTrades(owner.trades);
-
-      const requester = await getTrades('requester');
-      setRequesterTrades(requester.trades);
-    };
-
-    fetchTrades();
-  }, []);
 
   return (
     <Container sx={{ py: 5 }}>
@@ -59,7 +32,7 @@ export default function Trades() {
       </Typography>
 
       <Grid container spacing={2}>
-        {requesterTrades?.map((trade) => (
+        {requester?.trades?.map((trade) => (
           <Grid item xs={4} key={trade.id}>
             <TradeCard trade={trade} />
           </Grid>
@@ -72,13 +45,13 @@ export default function Trades() {
         </Typography>
 
         <Grid container spacing={2}>
-          {ownerTrades?.map((trade) => (
+          {owner?.trades?.map((trade) => (
             <Grid item xs={4} key={trade.id}>
               <TradeCard
                 trade={trade}
                 hasActions
-                onAccept={() => handleAccept(trade.id)}
-                onRefuse={() => handleRefuse(trade.id)}
+                onAccept={() => handleUpdate(trade.id, 'ACCEPTED')}
+                onRefuse={() => handleUpdate(trade.id, 'REJECTED')}
               />
             </Grid>
           ))}

@@ -29,8 +29,8 @@ export default async function Search({ searchParams }: Props) {
 
       <Stack direction="row" sx={styles.books}>
         {books.map((book) => (
-          <WLink href={`/books/${book.id}`}>
-            <WBanner image={book.image} placeholder={book.title} key={book.id} />
+          <WLink href={`/books/${book.id}`} key={book.id}>
+            <WBanner image={book.image} placeholder={book.title} />
           </WLink>
         ))}
       </Stack>
